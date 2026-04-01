@@ -1,0 +1,25 @@
+{
+  "models": {
+    "mistral-7b-instruct": {
+      "repo": "TheBloke/Mistral-7B-Instruct-v0.2-GGUF",
+      "file": "mistral-7b-instruct-v0.2.Q4_K_M.gguf",
+      "description": "Mistral 7B Instruct v0.2 - Q4_K_M quantization (recommended default)"
+    },
+    "mistral-7b-instruct-q5": {
+      "repo": "TheBloke/Mistral-7B-Instruct-v0.2-GGUF",
+      "file": "mistral-7b-instruct-v0.2.Q5_K_M.gguf",
+      "description": "Mistral 7B Instruct v0.2 - Q5_K_M quantization (higher quality, more RAM)"
+    },
+    "llama-2-7b-chat": {
+      "repo": "TheBloke/Llama-2-7B-Chat-GGUF",
+      "file": "llama-2-7b-chat.Q4_K_M.gguf",
+      "description": "Llama 2 7B Chat - Q4_K_M quantization"
+    },
+    "phi-2": {
+      "repo": "TheBloke/phi-2-GGUF",
+      "file": "phi-2.Q4_K_M.gguf",
+      "description": "Phi-2 2.7B - Q4_K_M quantization (lightweight)"
+    }
+  },
+  "default": "mistral-7b-instruct"
+}

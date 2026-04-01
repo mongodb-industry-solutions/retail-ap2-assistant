@@ -1,0 +1,106 @@
+{
+  "workflowId": "straightforward",
+  "conversation": [
+    {
+      "role": "user",
+      "message": "Hey, I want to purchase something today!"
+    },
+    {
+      "role": "agent",
+      "message": "Hello! I can help you with that. To start, please tell me what item you are looking for.",
+      "step": "shopping-agent-introduction"
+    },
+    {
+      "role": "user",
+      "message": "I'm looking for running shoes. Show me some options."
+    },
+    {
+      "role": "agent",
+      "message": "Got it. Do you have any preferred brands or merchants in mind for your running shoes?"
+    },
+    {
+      "role": "user",
+      "message": "No, I don’t have a preferred brand or merchant. You can choose for me."
+    },
+    {
+      "role": "agent",
+      "message": "Okay, no problem. Is it important that the running shoes are refundable?"
+    },
+    {
+      "role": "user",
+      "message": "Yes, I’d like them to be refundable."
+    },
+    {
+      "role": "agent",
+      "message": "Please confirm the following details for your purchase. Note that this information will be shared with the merchant.\n\nItem Description: running shoes\nUser Confirmation Required: Yes\nMerchants: Any\nSKUs: Any\nRefundable: Yes\nExpires: in 2 years\n\nShall I proceed?",
+      "step": "merchant-agent-introduction"
+    },
+    {
+      "role": "user",
+      "message": "Yes, please proceed."
+    },
+    {
+      "role": "agent",
+      "message": "Here are some running shoe options for you:\n\n1.  **Standard Running Shoes**\n    Price: $65.00\n    Expires: in 2 years\n    Refund Period: 30 days\n\n2.  **Performance Running Shoes**\n    Price: $120.00\n    Expires: in 2 years\n    Refund Period: 45 days\n\n3.  **Advanced Stability Running Shoes**\n    Price: $180.00\n    Expires: in 2 years\n    Refund Period: 60 days\n\nSold by: Generic Merchant\n\nI've listed the Standard Running Shoes first as they are the most budget-friendly option, offering a great starting point for general running needs.\n\nWhich item would you like to purchase? Please specify the number.",
+      "step": "mandates-created"
+    },
+    {
+      "role": "user",
+      "message": "I choose option 2: Performance Running Shoes."
+    },
+    {
+      "role": "agent",
+      "message": "Great! Your selection of Performance Running Shoes has been successfully updated.\n\nWould you prefer to use a digital wallet to access your credentials for this purchase, or would you like to enter your shipping address manually?"
+    },
+    {
+      "role": "user",
+      "message": "I would like to use a digital wallet."
+    },
+    {
+      "role": "agent",
+      "message": "Which digital wallet would you like to use for this transaction?"
+    },
+    {
+      "role": "user",
+      "message": "Google Wallet"
+    },
+    {
+      "role": "agent",
+      "message": "This is where you might have to go through a redirect to prove your identity and allow your credentials provider to share credentials with the AI Agent.\n\nBut this is a demo, so I will assume you have granted me access to your account, with the login of bugsbunny@gmail.com.\n\nIs that ok?"
+    },
+    {
+      "role": "user",
+      "message": "Yes, that's fine. You can proceed."
+    },
+    {
+      "role": "agent",
+      "message": "Here is the shipping address you provided:\n\nRecipient: Bugs Bunny\nAddress Line: 123 Main St\nCity: Sample City\nRegion: ST\nPostal Code: 00000\nCountry: US\nOrganization: Sample Organization\nPhone Number: +1-000-000-0000\n\nHere is a summary of your order:\n\n### Order Summary\nMerchant: Generic Merchant\nItem: Gaming headset with integrated noise cancellation microphone\nPrice Breakdown:\nItem: £113.50\nShipping: $2.00\nTax: $1.50\nTotal: £113.50\nExpires: March 26, 2026 at 5:29 PM UTC\nRefund Period: 60 days\n\n### Shipping Address\nRecipient: Bugs Bunny\nAddress Line: 123 Main St\nCity: Sample City\nRegion: ST\nPostal Code: 00000\nCountry: US\nOrganization: Sample Organization\nPhone Number: +1-000-000-0000\n\nI can process your payment using the following methods:\n\n1. American Express ending in 4444\n2. American Express ending in 8888\n\nWhich of these would you like to use for your payment? Please reply with the number corresponding to your chosen payment method.",
+      "step": "cart-mandate-signed-payment-credentials"
+    },
+    {
+      "role": "user",
+      "message": "I choose option 1: American Express ending in 4444."
+    },
+    {
+      "role": "agent",
+      "message": "This is where you would be redirected to a trusted surface to confirm the purchase.\nBut this is a demo, so you can confirm your purchase here.\n### Final Cart Contents\n* **Item:** Gaming headset with integrated noise cancellation microphone\n* **Price:** £110.00\n* **Shipping:** $2.00\n* **Tax:** $1.50\n* **Total Price:** £113.50\n* **Expires:** March 26, 2026 at 5:29 PM UTC\n* **Refundable within:** 60 days\n\n### Shipping Address\n* **Recipient:** Bugs Bunny\n* **Address Line:** 123 Main St\n* **City:** Sample City\n* **Region:** ST\n* **Postal Code:** 00000\n* **Country:** US\n* **Organization:** Sample Organization\n* **Phone Number:** +1-000-000-0000\n\n### Payment Method\n* American Express ending in 4444\n\nDo you confirm this purchase?"
+    },
+    {
+      "role": "user",
+      "message": "Yes, I confirm this purchase."
+    },
+    {
+      "role": "agent",
+      "message": "The payment method issuer sent a verification code to the phone number on file, please enter it below. It will be shared with the issuer so they can authorize the transaction.(Demo only hint: the code is 123)"
+    },
+    {
+      "role": "user",
+      "message": "The verification code is 123."
+    },
+    {
+      "role": "agent",
+      "message": "### Payment Receipt\n**Payment ID:** `pay_ba8cd378-b03c-4fb8-893f-041ae1c68cad`\n\n* **Item:** Gaming headset with integrated noise cancellation microphone\n* **Price:** £110.00\n* **Shipping:** $2.00\n* **Tax:** $1.50\n* **Total Price:** £113.50\n\n### Shipping Address\n* **Recipient:** Bugs Bunny\n* **Address Line:** 123 Main St\n* **City:** Sample City\n* **Region:** ST\n* **Postal Code:** 00000\n* **Country:** US\n* **Organization:** Sample Organization\n* **Phone Number:** +1-000-000-0000\n\n### Payment Method\n* American Express ending in 4444",
+      "step": "payment-completed"
+    }
+  ]
+}

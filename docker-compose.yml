@@ -1,15 +1,18 @@
 services:
-  demoname-backend:
-    build:
+  assistant:
+    build: 
       context: .
-      no_cache: true
       dockerfile: Dockerfile.backend
-    image: imagename-backend:latest
-    volumes:
-      - ~/.aws/credentials:/root/.aws/credentials:ro
-      - ~/.aws/config:/root/.aws/config:ro
-      - ~/.aws/sso/cache:/root/.aws/sso/cache:rw  # Only make cache writable
+    container_name: mongodb-assistant
     ports:
-      - "8000:8000"
-    restart: always
-    container_name: demoname-backend
+      - "${APP_PORT:-8000}:8000"
+    volumes:
+      - ./models:/app/models:ro
+      - ./cfg/.env:/app/cfg/.env:ro
+    environment:
+      - LLM_PROVIDER=${LLM_PROVIDER:-LOCAL}
+      - LLM_LOCAL_MODEL_PATH=${LLM_LOCAL_MODEL_PATH:-models/mistral-7b-instruct-v0.2.Q4_K_M.gguf}
+      - LLM_LOCAL_MODEL_N_CTX=${LLM_LOCAL_MODEL_N_CTX:-4096}
+      - LLM_LOCAL_MODEL_N_THREADS=${LLM_LOCAL_MODEL_N_THREADS:-4}
+      - LLM_LOCAL_MODEL_TEMPERATURE=${LLM_LOCAL_MODEL_TEMPERATURE:-0.7}
+    restart: unless-stopped
