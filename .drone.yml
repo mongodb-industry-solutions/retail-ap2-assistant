@@ -40,8 +40,8 @@ steps:
       values_files: ["environment/staging.yaml"]
       values:
         - "sidecarContainers[0].image=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-ap2-assistant-backend:git-${DRONE_COMMIT_SHA:0:7}"
-        - "image.tag=alpine"
-        - "image.repository=nginx"
+        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
+        - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-ap2-assistant-backend"
         - "ingress.enabled=true"
         - "ingress.hosts[0]=retail-ap2-assistant-backend.industrysolutions.staging.corp.mongodb.com"
         - "mesh.enabled=true"
