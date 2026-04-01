@@ -55,9 +55,9 @@ steps:
         - "resources.requests.cpu=50m"
         - "resources.requests.memory=64Mi"
         # Backend sidecar resources (increased for AI workload)
-        - "sidecarContainers[0].resources.limits.cpu=1000m"
+        - "sidecarContainers[0].resources.limits.cpu=500m"
         - "sidecarContainers[0].resources.limits.memory=1Gi"
-        - "sidecarContainers[0].resources.requests.cpu=200m"
+        - "sidecarContainers[0].resources.requests.cpu=150m"
         - "sidecarContainers[0].resources.requests.memory=512Mi"
       api_server: https://api.staging.corp.mongodb.com
       kubernetes_token:
