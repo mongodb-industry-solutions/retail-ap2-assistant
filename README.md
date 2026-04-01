@@ -252,6 +252,10 @@ These open protocols sit alongside conversational and commerce-oriented agent sy
 | **Gemini** (remote) | [Vertex AI generative AI](https://cloud.google.com/vertex-ai/generative-ai/docs/overview) · [LangChain `ChatGoogleGenerativeAI`](https://reference.langchain.com/python/integrations/langchain_google_genai/ChatGoogleGenerativeAI/) |
 | **Local GGUF** (llama-cpp) | [llama-cpp-python](https://github.com/abetlen/llama-cpp-python) · [LangChain LlamaCpp](https://python.langchain.com/docs/integrations/llms/llamacpp/) |
 
-## 📄 License
+## �‍💻 Authors
+
+**[Antonio Membrides Espinosa](https://github.com/ameksike)** - Solution Assurance - Security Integration Engineer
+
+## �📄 License
 
 See [LICENSE](LICENSE).
