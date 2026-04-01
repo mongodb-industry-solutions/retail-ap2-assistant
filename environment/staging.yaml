@@ -2,8 +2,6 @@ env:
   NODE_ENV: staging
   # AWS region for IRSA (no credentials needed)
   AWS_REGION: us-east-1
-  # Backend API URL for frontend to connect to backend health check - get <service-name> using kubectl get services
-  NEXT_PUBLIC_BACKEND_ENDPOINT: http://localhost:8080 # Multi-container pod setup - backend sidecar accessible via localhost
   #COLLECTION_NAME: test-collection
   GOOGLE_APPLICATION_CREDENTIALS: /etc/gcp/credential-configuration.json
   GCP_PROJECT_ID: ist-retail-demo
