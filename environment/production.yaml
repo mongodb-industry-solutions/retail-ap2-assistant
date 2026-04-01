@@ -10,26 +10,21 @@ env:
 
 ## Single Pod Containers
 envSecrets:
-  # MongoDB Configuration
-  MONGODB_URI: retail-ap2-assistant
-  MONGODB_DATABASE: retail-ap2-assistant
+  # Workflow Configuration
+  WORKFLOW_PROVIDER: retail-ap2-assistant
+  WORKFLOW_DIR: retail-ap2-assistant
+  # LLM Configuration
+  LLM_PROVIDER: retail-ap2-assistant
+  GOOGLE_MODEL_ID: retail-ap2-assistant
   # Google Cloud Configuration
   GOOGLE_GENAI_USE_VERTEXAI: retail-ap2-assistant
   GOOGLE_CLOUD_PROJECT: retail-ap2-assistant
   GOOGLE_CLOUD_LOCATION: retail-ap2-assistant
-  # Mandate Ledger Configuration
-  MANDATE_LEDGER_SERVICE_URL: retail-ap2-assistant
-  MANDATE_LEDGER_API_KEY: retail-ap2-assistant
-  # Bootstrap and Auth Configuration
-  ENABLE_BOOTSTRAP_AUTH: retail-ap2-assistant
-  BOOTSTRAP_ADMIN_KEY: retail-ap2-assistant
-  # Rate Limiting
-  DEFAULT_RATE_LIMIT_PER_MINUTE: retail-ap2-assistant
-  # CORS Configuration
-  ALLOWED_CORS_ORIGINS: retail-ap2-assistant
-  # Service Configuration
-  SERVICE_NAME: retail-ap2-assistant
-  ENVIRONMENT: retail-ap2-assistant 
+  # MongoDB Configuration
+  MDB_URI: retail-ap2-assistant
+  MDB_DATABASE_NAME: retail-ap2-assistant
+  MDB_COLLECTION_NAME: retail-ap2-assistant
+
   
 ## ----------------------------- Cloud Specific Configurations -----------------------------
 
