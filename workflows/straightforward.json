@@ -1,0 +1,50 @@
+{
+  "workflowId": "straightforward",
+  "description": "This workflow defines a guided purchase interaction between the Shopping Agent and the user. It evaluates the latest agent response in the context of the full conversation, determines whether the interaction has clearly reached a specific workflow step, and generates the best one to three guided reply options to keep the conversation moving forward. The suggested replies should be closely related in intent and only slightly different in wording, so the user can progress through a simple, structured, and sequential purchase flow without skipping any declared step. Each confirmed step enables the frontend to display associated behind-the-scenes content that explains the system behavior and the role of the underlying agentic commerce concepts. The workflow is considered complete only when the agent returns the receipt.",
+  "goals": [
+    "Guide the user through a successful purchase flow in a simple, sequential, and easy-to-follow way.",
+    "Identify when the latest Shopping Agent response clearly corresponds to a declared workflow step.",
+    "Carefully evaluate the latest agent response in the context of the full conversation to determine whether it should be associated with a specific step or not.",
+    "Apply the workflow logic in a contextual and strict way to avoid incorrect or premature step classification.",
+    "Generate one to three guided reply options that help the user move naturally toward the next valid step without changing the direction of the flow.",
+    "Ensure the user progresses through all declared workflow steps before completing the purchase."
+  ],
+  "policies": [
+    "All workflow steps are sequential and must be completed in order.",
+    "No declared step may be skipped.",
+    "The workflow must always evaluate the latest message in the input conversation, which must be the agent’s message, to determine step association. Any returned step must correspond to that latest agent response",
+    "Step classification must always refer to the latest agent message as a concrete message-level association, not as a persistent workflow state.",
+    "A step must only be returned when the latest agent message represents a new and distinct transition in the workflow. If the conversation continues within the same stage as a previously identified step, the `step` field must be omitted.",
+    "The suggested user replies must be coherent response options to the latest message in the conversation, which is the agent’s message.",
+    "The purchase flow cannot be considered complete until the receipt has been returned by the agent.",
+    "Whenever the agent presents selectable options, the generated user replies must map one-to-one to those options. No additional options may be introduced, and no provided options may be omitted. Each reply must preserve the original meaning and details of the agent’s options without modification.",
+    "Return a workflow step only when the latest agent response and the full conversation context clearly support that step.",
+    "Suggested reply options must always be between one and three when the workflow is still active.",
+    "Suggested reply options must remain very close in intent and must not lead the user to materially different paths.",
+    "Suggested reply options must guide the user toward the next valid step in the declared sequence.",
+    "The workflow must prioritize a straightforward purchase journey over open-ended exploration.",
+    "Whenever the agent asks for digital payment options, exactly two user reply options must be provided: Google Wallet and PayPal"
+  ],
+  "steps": [
+    {
+      "id": "shopping-agent-introduction",
+      "description": "After the user’s initial greeting, the first response from the agent always corresponds to this step. The generated user reply options must always be oriented toward initiating a purchase process, limited to a maximum of two interests: running shoes or a coffee maker, or very similar options. Do not introduce creative or unrelated variations."
+    },
+    {
+      "id": "merchant-agent-introduction",
+      "description": "This step represents the purchase intent confirmation stage in the straightforward workflow. It must only be activated when the Shopping Agent explicitly asks the user to confirm the purchase details already gathered from the previous conversation in order to proceed with searching for options through a merchant. It must not be triggered during earlier exploratory questions, such as requests for missing preferences, brands, merchants, refund conditions, or other purchase details that are still being collected. This is the second declared step in the workflow, following `shopping-agent-introduction` and preceding `mandates-created`. At this stage, the response must always include exactly one suggested user reply, and that reply must be affirmative. This step must not be confused with the later cart proposal stage, where multiple purchase options are presented to the user."
+    },
+    {
+      "id": "mandates-created",
+      "description": "This step represents the stage in which the agent presents a set of product proposals to the user, typically three options. At this point, the workflow is clearly in `mandates-created`. This step follows `merchant-agent-introduction`, where the user confirmed their purchase intent, and precedes `cart-mandate-signed-payment-credentials`.The generated user reply options must be simple and coherent, with one response per option provided by the agent."
+    },
+    {
+      "id": "cart-mandate-signed-payment-credentials",
+      "description": "This step must be associated when the latest agent message clearly reflects that the user has already selected one of the proposed purchase options and has explicitly authorized the flow to continue toward payment. It applies to agent messages that present or confirm payment preparation details, such as shipping information, order summary, credential-related confirmation, or payment method selection. This step follows `mandates-created` and precedes `payment-completed`.The generated user reply options must be coherent with the workflow currently being presented."
+    },
+    {
+      "id": "payment-completed",
+      "description": "This is the final step of the workflow. It occurs after the payment flow has been completed and is confirmed by the delivery of the purchase receipt. At this point, the purchase is considered finished. The user may simply respond with a closing message such as 'Thank you very much,' but no further workflow progression is expected."
+    }
+  ]
+}

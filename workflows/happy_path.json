@@ -1,0 +1,19 @@
+{
+  "description": "Purchase workflow guiding the user through the shopping process.",
+  "goals": [
+    "Understand user intent.",
+    "Provide relevant product options.",
+    "Finalize purchase and delivery."
+  ],
+  "policy": [
+    "Steps must follow sequential order.",
+    "No purchase confirmation before agreement on items."
+  ],
+  "steps": [
+    { "id": "introduction", "description": "Introduce the seller and explain the purchase process." },
+    { "id": "intentIdentification", "description": "Understand the user's intent and preferences for items." },
+    { "id": "proposal", "description": "Present relevant product options." },
+    { "id": "agreement", "description": "Ensure user's agreement on selected items and details." },
+    { "id": "purchase", "description": "Finalize payment and arrange delivery." }
+  ]
+}
