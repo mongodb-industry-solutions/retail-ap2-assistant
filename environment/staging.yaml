@@ -20,8 +20,7 @@ envSecrets:
   # Google Cloud Configuration
   GOOGLE_GENAI_USE_VERTEXAI: retail-ap2-assistant
   GOOGLE_CLOUD_PROJECT: retail-ap2-assistant
-  ret: retail-ap2-assistant
-  # MongoDB Configuration
+  GOOGLE_CLOUD_LOCATION: retail-ap2-assistant  # MongoDB Configuration
   MDB_URI: retail-ap2-assistant
   MDB_DATABASE_NAME: retail-ap2-assistant
   MDB_COLLECTION_NAME: retail-ap2-assistant
