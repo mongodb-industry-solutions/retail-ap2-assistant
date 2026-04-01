@@ -129,6 +129,14 @@ extraVolumes:
             expirationSeconds: 3600  # Token expires after 1 hour and auto-renews
             audience: "//iam.googleapis.com/projects/531154772515/locations/global/workloadIdentityPools/kanopy-retail-wif-pool/providers/kanopy-retail-provider"
 
+extraVolumeMounts:
+  - name: gcp-creds
+    mountPath: /etc/gcp
+    readOnly: true
+  - name: gcp-token
+    mountPath: /var/run/service-account
+    readOnly: true
+
 # Kanopy security and ownership (requires web-app chart v4.30.0+)
 security:
   dataClassification: "Internal"
