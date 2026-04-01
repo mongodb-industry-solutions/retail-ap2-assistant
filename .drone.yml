@@ -31,7 +31,7 @@ steps:
     image: public.ecr.aws/kanopy/drone-helm:v3
     settings:
       chart: mongodb/web-app
-      chart_version: 4.30.0+
+      chart_version: 4.30.0
       add_repos: [mongodb=https://10gen.github.io/helm-charts]
       namespace: industrysolutions
       release: retail-ap2-assistant-backend ## NEED TO CHANGE - based on your demo name for eg.: financial-news-vector-search
@@ -86,7 +86,7 @@ steps:
     image: public.ecr.aws/kanopy/drone-helm:v3
     settings:
       chart: mongodb/web-app
-      chart_version: 4.30.0+
+      chart_version: 4.30.0
       add_repos: [mongodb=https://10gen.github.io/helm-charts]
       namespace: industrysolutions
       release: retail-ap2-assistant-backend-prod ## NEED TO CHANGE - based on your demo name for eg.: financial-news-vector-search-backend-prod
