@@ -2,8 +2,6 @@ env:
   NODE_ENV: staging
   # AWS region for IRSA (no credentials needed)
   AWS_REGION: us-east-1
-  # Backend API URL for frontend to connect to backend health check - get <service-name> using kubectl get services
-  NEXT_PUBLIC_BACKEND_ENDPOINT: http://localhost:8000 # Multi-container pod setup - backend sidecar accessible via localhost
   #COLLECTION_NAME: test-collection
   GOOGLE_APPLICATION_CREDENTIALS: /etc/gcp/credential-configuration.json
   GCP_PROJECT_ID: ist-retail-demo
@@ -20,14 +18,99 @@ envSecrets:
   # Google Cloud Configuration
   GOOGLE_GENAI_USE_VERTEXAI: retail-ap2-assistant
   GOOGLE_CLOUD_PROJECT: retail-ap2-assistant
-  GOOGLE_CLOUD_LOCATION: retail-ap2-assistant
-  # MongoDB Configuration
+  GOOGLE_CLOUD_LOCATION: retail-ap2-assistant  # MongoDB Configuration
   MDB_URI: retail-ap2-assistant
   MDB_DATABASE_NAME: retail-ap2-assistant
   MDB_COLLECTION_NAME: retail-ap2-assistant
 
- 
 ## ----------------------------- Cloud Specific Configurations -----------------------------
+
+## Backend Sidecar Container (AI Workload)
+sidecarContainers:
+  - name: backend
+    # Image will be overridden by Drone pipeline with specific git-SHA tag
+    image: 795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-ap2-assistant-backend:latest
+    
+    # Expose backend port (accessible via localhost from main container)
+    ports:
+      - containerPort: 8080
+        name: backend
+    
+    # Environment variables for backend container
+    env:
+      - name: NODE_ENV
+        value: staging
+
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/gcp/credential-configuration.json
+
+      - name: WORKFLOW_PROVIDER
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: WORKFLOW_PROVIDER
+
+      - name: WORKFLOW_DIR
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: WORKFLOW_DIR
+
+      - name: LLM_PROVIDER
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: LLM_PROVIDER
+
+      - name: GOOGLE_MODEL_ID
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: GOOGLE_MODEL_ID
+
+      - name: GOOGLE_GENAI_USE_VERTEXAI
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: GOOGLE_GENAI_USE_VERTEXAI
+
+      - name: GOOGLE_CLOUD_PROJECT
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: GOOGLE_CLOUD_PROJECT
+
+      - name: GOOGLE_CLOUD_LOCATION
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: GOOGLE_CLOUD_LOCATION
+
+      - name: MDB_URI
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: MDB_URI
+
+      - name: MDB_DATABASE_NAME
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: MDB_DATABASE_NAME
+
+      - name: MDB_COLLECTION_NAME
+        valueFrom:
+          secretKeyRef:
+            name: retail-ap2-assistant
+            key: MDB_COLLECTION_NAME
+    
+    volumeMounts:
+      - name: gcp-creds
+        mountPath: /etc/gcp
+        readOnly: true
+      - name: gcp-token
+        mountPath: /var/run/service-account
+        readOnly: true
 
 # GCP Workload Identity Federation configuration
 serviceAccount:
