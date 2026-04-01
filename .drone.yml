@@ -1,97 +1,79 @@
 ---
 kind: pipeline
 type: kubernetes
-name: staging-combined
+name: staging
 
 trigger:
   branch:
     - staging
 
+# replace retail-ap2-assistant with your demo name for eg.: financial-news-vector-search
 steps:
-  # Step 1: Build and publish backend Docker image
   - name: publish-backend
     image: plugins/kaniko-ecr
     settings:
       create_repository: true
-      registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com
-      repo: industrysolutions/retail-ap2-assistant-backend
-      dockerfile: Dockerfile.backend
-      context: .
+      registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com ## keep same for all demos < - aws ecr registry used to store docker image
+      repo: industrysolutions/retail-ap2-assistant ## NEED TO CHANGE - based on your demo name for eg.: financial-news-vector-search
       tags:
         - git-${DRONE_COMMIT_SHA:0:7}
         - latest
+      dockerfile: Dockerfile.backend
       access_key:
-        from_secret: ecr_access_key
+        from_secret: ecr_access_key ## set in drone web ui
       secret_key:
-        from_secret: ecr_secret_key
+        from_secret: ecr_secret_key ## set in drone web ui
     when:
       event:
         - push
 
-  # Step 2: Deploy backend sidecar to Kubernetes
   - name: deploy-backend-staging
     image: public.ecr.aws/kanopy/drone-helm:v3
     settings:
       chart: mongodb/web-app
-      chart_version: "4.30.0"
+      chart_version: 4.30.0
       add_repos: [mongodb=https://10gen.github.io/helm-charts]
       namespace: industrysolutions
-      release: retail-ap2-assistant-backend
-      values_files: ["environment/staging.yaml"]
+      release: retail-ap2-assistant ## NEED TO CHANGE - based on your demo name for eg.: financial-news-vector-search
       values:
-        - "sidecarContainers[0].image=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-ap2-assistant-backend:git-${DRONE_COMMIT_SHA:0:7}"
-        - "image.tag=alpine"
-        - "image.repository=nginx"
+        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
+        - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-ap2-assistant" ## NEED TO CHANGE replace retail-ap2-assistant with your backend pod name from above
         - "ingress.enabled=true"
-        - "ingress.hosts[0]=retail-ap2-assistant-backend.industrysolutions.staging.corp.mongodb.com"
+        - "ingress.hosts[0]=retail-ap2-assistant.industrysolutions.staging.corp.mongodb.com" ## NEED TO CHANGE replace retail-ap2-assistant with your demo name for eg.: financial-news-vector-search
         - "mesh.enabled=true"
-        # Service configuration to route to backend sidecar port 8080
-        - "service.port=8080"
-        - "service.targetPort=8080"
-        - "service.name=backend"
-        # Frontend resources (nginx minimal)
-        - "resources.limits.cpu=100m"
-        - "resources.limits.memory=128Mi"
-        - "resources.requests.cpu=50m"
-        - "resources.requests.memory=64Mi"
-        # Backend sidecar resources (increased for AI workload)
-        - "sidecarContainers[0].resources.limits.cpu=500m"
-        - "sidecarContainers[0].resources.limits.memory=1Gi"
-        - "sidecarContainers[0].resources.requests.cpu=150m"
-        - "sidecarContainers[0].resources.requests.memory=512Mi"
+        # Backend resources (reduced defaults for demos - increase if OOMKilled)
+        - "resources.limits.cpu=500m"
+        - "resources.limits.memory=1Gi"
+        - "resources.requests.cpu=150m"
+        - "resources.requests.memory=512Mi"
       api_server: https://api.staging.corp.mongodb.com
       kubernetes_token:
-        from_secret: staging_kubernetes_token
+        from_secret: staging_kubernetes_token ## set in drone web ui
+      values_files: [ "environment/staging.yaml" ]
     when:
-      branch:
-        - staging
       event:
         - push
 
 ---
 kind: pipeline
 type: kubernetes
-name: production-combined
+name: production
 
 trigger:
   branch:
-    - main
-  event:
-    - push
+    - main  # or master, depending on your main branch name
 
 steps:
-  # Step 1: Build and publish backend Docker image
   - name: publish-backend-prod
     image: plugins/kaniko-ecr
     settings:
       create_repository: true
-      registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com
-      repo: industrysolutions/retail-ap2-assistant-backend-prod
-      dockerfile: Dockerfile.backend
-      context: .
+      registry: 795250896452.dkr.ecr.us-east-1.amazonaws.com # keep same for all demos < - aws ecr registry used to store docker image
+      repo: industrysolutions/retail-ap2-assistant-backend-prod ## NEED TO CHANGE - based on your demo name for eg.: financial-news-vector-search-backend-prod
       tags:
-        - git-${DRONE_COMMIT_SHA:0:7}
-        - latest
+        - git-${DRONE_COMMIT_SHA:0:7}-prod
+        - prod-latest
+      dockerfile: Dockerfile.backend
       access_key:
         from_secret: ecr_access_key
       secret_key:
@@ -100,42 +82,29 @@ steps:
       event:
         - push
 
-  # Step 2: Deploy backend sidecar to production
-  - name: deploy-backend-prod
+  - name: deploy-backend-production
     image: public.ecr.aws/kanopy/drone-helm:v3
     settings:
       chart: mongodb/web-app
-      chart_version: "4.30.0"
+      chart_version: 4.30.0
       add_repos: [mongodb=https://10gen.github.io/helm-charts]
       namespace: industrysolutions
-      release: retail-ap2-assistant-backend-prod
-      values_files: ["environment/production.yaml"]
+      release: retail-ap2-assistant-backend-prod ## NEED TO CHANGE - based on your demo name for eg.: financial-news-vector-search-backend-prod
       values:
-        - "sidecarContainers[0].image=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-ap2-assistant-backend-prod:git-${DRONE_COMMIT_SHA:0:7}"
-        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
-        - "image.repository=nginx:alpine"
+        - "image.tag=git-${DRONE_COMMIT_SHA:0:7}-prod"
+        - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-ap2-assistant-backend-prod" ## NEED TO CHANGE replace retail-ap2-assistant with your backend pod name from above
         - "ingress.enabled=true"
         - "ingress.hosts[0]=retail-ap2-assistant-backend.industrysolutions.prod.corp.mongodb.com"
         - "mesh.enabled=true"
-        # Service configuration to route to backend sidecar port 8080
-        - "service.port=8080"
-        - "service.targetPort=8080"
-        - "service.name=backend"
-        # Frontend resources (nginx minimal)
-        - "resources.limits.cpu=100m"
-        - "resources.limits.memory=128Mi"
-        - "resources.requests.cpu=50m"
-        - "resources.requests.memory=64Mi"
-        # Backend sidecar resources (production - higher for reliability)
-        - "sidecarContainers[0].resources.limits.cpu=1000m"
-        - "sidecarContainers[0].resources.limits.memory=1Gi"
-        - "sidecarContainers[0].resources.requests.cpu=250m"
-        - "sidecarContainers[0].resources.requests.memory=512Mi"
+        # Backend resources (production - slightly higher for reliability)
+        - "resources.limits.cpu=500m"
+        - "resources.limits.memory=1Gi"
+        - "resources.requests.cpu=150m"
+        - "resources.requests.memory=512Mi"
       api_server: https://api.prod.corp.mongodb.com
       kubernetes_token:
-        from_secret: prod_kubernetes_token
+        from_secret: production_kubernetes_token
+      values_files: [ "environment/production.yaml" ]
     when:
-      branch:
-        - main
       event:
         - push
