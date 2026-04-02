@@ -42,9 +42,9 @@ class LlmVertexAiService(LlmService):
             self.authMode = "vertexAi"
             self.project = project
             self.client = genai.Client(
-                vertexai=True,
-                project=project,
-                location=self.location,
+                # vertexai=True,
+                # project=project,
+                # location=self.location,
             )
             logger.info(
                 "LlmVertexAiService initialized (Vertex AI, model=%s, "
