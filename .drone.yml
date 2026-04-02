@@ -38,6 +38,7 @@ steps:
       values:
         - "image.tag=git-${DRONE_COMMIT_SHA:0:7}"
         - "image.repository=795250896452.dkr.ecr.us-east-1.amazonaws.com/industrysolutions/retail-ap2-assistant" ## NEED TO CHANGE replace retail-ap2-assistant with your backend pod name from above
+        - "serviceAccount.annotations.iam\\.gke\\.io/gcp-service-account=retail-kanopy-sa@ist-retail-demo.iam.gserviceaccount.com"
         - "ingress.enabled=true"
         - "ingress.hosts[0]=retail-ap2-assistant.industrysolutions.staging.corp.mongodb.com" ## NEED TO CHANGE replace retail-ap2-assistant with your demo name for eg.: financial-news-vector-search
         - "mesh.enabled=true"
