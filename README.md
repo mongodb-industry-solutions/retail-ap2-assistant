@@ -1,4 +1,4 @@
-# 🤖 Conversational Assistance System
+# 🤖 Conversational Assistance System.
 
 This project started as a PoC (Proof of Concept) of a virtual assistant to perform demonstrations for the project ['Mandate Ledger Service - AP2 & UCP Protocol Implementation supported on MongoDB'](./doc/mls-project.md). A dynamic conversational assistance system built with **Python**, **FastAPI**, **LangChain**, **MongoDB**, and LLMs. The system analyzes conversation context and guides interactions based on configurable workflow definitions.
 
