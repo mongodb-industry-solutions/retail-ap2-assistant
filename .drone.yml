@@ -104,7 +104,7 @@ steps:
         - "resources.requests.memory=512Mi"
       api_server: https://api.prod.corp.mongodb.com
       kubernetes_token:
-        from_secret: production_kubernetes_token
+        from_secret: prod_kubernetes_token
       values_files: [ "environment/production.yaml" ]
     when:
       event:
