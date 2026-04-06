@@ -1,36 +1,8 @@
-env:
-  NODE_ENV: prod
-  # AWS region for IRSA (no credentials needed)
-  AWS_REGION: us-east-1
-  # Backend API URL for frontend to connect to backend health check
-  NEXT_PUBLIC_BACKEND_ENDPOINT: http://localhost:8000 # Backend API URL; localhost assumes backend is co-located (e.g., sidecar). Update to the actual backend endpoint for production.
-  GOOGLE_APPLICATION_CREDENTIALS: /etc/gcp/credential-configuration.json
-  GCP_PROJECT_ID: ist-retail-demo
-  GCP_LOCATION: us-central1
-
-## Single Pod Containers
-envSecrets:
-  # Workflow Configuration
-  WORKFLOW_PROVIDER: retail-ap2-assistant
-  WORKFLOW_DIR: retail-ap2-assistant
-  # LLM Configuration
-  LLM_PROVIDER: retail-ap2-assistant
-  GOOGLE_MODEL_ID: retail-ap2-assistant
-  # Google Cloud Configuration
-  GOOGLE_GENAI_USE_VERTEXAI: retail-ap2-assistant
-  GOOGLE_CLOUD_PROJECT: retail-ap2-assistant
-  GOOGLE_CLOUD_LOCATION: retail-ap2-assistant
-  # MongoDB Configuration
-  MDB_URI: retail-ap2-assistant
-  MDB_DATABASE_NAME: retail-ap2-assistant
-  MDB_COLLECTION_NAME: retail-ap2-assistant
-
-  
-## ----------------------------- Cloud Specific Configurations -----------------------------
-
 # GCP Workload Identity Federation configuration  
 serviceAccount:
   enabled: true
+  name: retail-kanopy-sa
+  annotations: {}   # Placeholder for injecting GCP Service Account annotation via Helm/pipeline. Reserved for ServiceAccount annotations injected at deploy time
 
 # Mount GCP credential config AND projected service account token
 extraVolumes:
@@ -53,6 +25,25 @@ extraVolumeMounts:
     mountPath: /var/run/service-account
     readOnly: true
 
+env:
+  NODE_ENV: staging
+  GOOGLE_APPLICATION_CREDENTIALS: /etc/gcp/credential-configuration.json
+  GCP_PROJECT_ID: ist-retail-demo
+  GCP_LOCATION: us-central1
+  
+## Single Pod Containers
+envSecrets:
+  WORKFLOW_PROVIDER: retail-ap2-assistant
+  WORKFLOW_DIR: retail-ap2-assistant
+  LLM_PROVIDER: retail-ap2-assistant
+  GOOGLE_MODEL_ID: retail-ap2-assistant
+  GOOGLE_GENAI_USE_VERTEXAI: retail-ap2-assistant
+  GOOGLE_CLOUD_PROJECT: retail-ap2-assistant
+  GOOGLE_CLOUD_LOCATION: retail-ap2-assistant  # MongoDB Configuration
+  MDB_URI: retail-ap2-assistant
+  MDB_DATABASE_NAME: retail-ap2-assistant
+  MDB_COLLECTION_NAME: retail-ap2-assistant
+  
 # Kanopy security and ownership (requires web-app chart v4.30.0+)
 security:
   dataClassification: "Internal"
@@ -60,3 +51,5 @@ security:
 
 ownership:
   driEmail: angie.guemes@mongodb.com
+
+
