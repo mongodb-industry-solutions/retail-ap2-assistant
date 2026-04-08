@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from typing import Dict, Any
 
 
 class ConversationMessage(BaseModel):
@@ -11,6 +12,7 @@ class ProcessRequest(BaseModel):
     workflowId: str
     conversation: list[ConversationMessage]
     maxAnswers: int = Field(default=2, ge=1)
+    paymentDocument: Dict[str, Any] | None = None
 
 
 class ProcessResponse(BaseModel):
