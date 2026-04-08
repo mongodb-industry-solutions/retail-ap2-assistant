@@ -13,10 +13,11 @@
     "Any returned step must refer only to the latest agent message.",
     "Return a declared workflow step only if the latest agent message clearly starts a new declared step.",
     "A declared step already attached to an earlier agent message must not be returned again for a later agent message.",
+    "If the latest agent message is the first reply to the user's initial greeting, the returned step must be `shopping-agent-introduction`. Do not return `in-between-step` or any later step for that message.",
     "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return one to three valid user replies.",
     "`in-between-step` is a valid fallback step for exploratory follow-up questions or intermediate turns that do not start a new declared workflow step.",
     "Exploratory follow-up questions that collect missing preferences, such as brand, model, merchant, budget, or refundability, must return `in-between-step` unless a step description explicitly says otherwise.",
-    "Whenever the latest agent message asks for one or more preferences, generated user reply options must answer clearly, concisely, and with the smallest useful amount of information needed to move the workflow forward. Prefer direct preferences, selections, or explicit absence of preference. Do not generate replies that ask for suggestions, recommendations, or further exploration unless the latest agent message explicitly requires that.",
+    "Whenever the latest agent message asks for one or more preferences, generated user reply options must answer clearly and concisely, but must not omit any preference that the active step explicitly requires.",
     "Each reply must be written in first person from the user's point of view.",
     "Never write replies from the agent's point of view.",
     "Do not generate assistant-style or explanatory replies.",
@@ -24,7 +25,6 @@
     "If the agent presents selectable options, replies must map one-to-one to those options.",
     "Do not add, remove, merge, or change agent-provided options.",
     "When the latest agent message asks for confirmation to proceed with identity verification, credential sharing, or account access, the generated user replies must be affirmative only.",
-    "Whenever the latest agent message asks whether to use a digital wallet or continue manually, generated user reply options must be affirmative digital-wallet replies only.",
     "If the detected step is `payment-completed`, return exactly two user replies and only these exact strings: `Thank you very much.` and `Excellent work!`."
   ],
   "steps": [
@@ -34,7 +34,7 @@
     },
     {
       "id": "shopping-agent-introduction",
-      "description": "Step 1 of 5. This step applies only to the first agent reply after the user's initial greeting. Do not return this step if any earlier agent message already has `step: shopping-agent-introduction`. Replies should state the item and also state merchant preference or no preference, whether refundability is required or not, and explicitly ask to see options. Keep replies concise and direct."
+      "description": "Step 1 of 5. This step applies only to the first agent reply after the user's initial greeting. If the latest agent message is that first reply, return `shopping-agent-introduction`. Do not return this step if any earlier agent message already has `step: shopping-agent-introduction`. Replies must always include all of the following in one short first-person user message: (1) the item the user wants to buy, (2) a merchant preference or an explicit statement that there is no merchant preference, (3) whether refundability is required or not required, and (4) an explicit request to see options. Do not omit refundability. Do not leave merchant preference implicit. Do not ask for recommendations. Keep replies concise and direct."
     },
     {
       "id": "merchant-agent-introduction",
