@@ -1,56 +1,66 @@
 {
   "workflowId": "straightforward",
-  "description": "Read the full conversation. Use any earlier `step` fields as confirmed completed steps. Check whether the last message, which is always from the agent, starts the next valid declared workflow step. If yes, return that step id. If not, return `in-between-step`. In all non-error cases, return one to three short user replies for the next turn. Replies must always be written as user messages, never as agent messages. The workflow is sequential and ends only when the agent returns the receipt.",
+  "description": "Read the full conversation. Use any earlier `step` fields as confirmed and exhausted steps. Check whether the last message, which is always from the agent, starts the next valid declared workflow step. If yes, return that step id. If not, return `in-between-step`. In all non-error cases, return one to three short user replies for the next turn. Replies must always be written as user messages, never as agent messages. The workflow is sequential and ends only when the agent returns the receipt.",
+
   "goals": [
     "Detect whether the latest agent message starts the next valid declared workflow step.",
-    "Return `in-between-step` when the latest agent message does not start a new declared workflow step.",
+    "Return `in-between-step` when the latest agent message does not clearly start a new declared workflow step.",
     "Return one to three short user replies for the next turn.",
     "Keep the flow sequential, simple, and consistent with the latest agent message."
   ],
-  "policies": [
-    "Declared workflow steps are sequential and cannot be skipped.",
-    "Any `step` field already present in earlier conversation messages is a confirmed completed step.",
-    "Any returned step must refer only to the latest agent message.",
-    "Return a declared workflow step only if the latest agent message clearly starts a new declared step.",
-    "A declared step already attached to an earlier agent message must not be returned again for a later agent message.",
-    "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return one to three valid user replies.",
-    "`in-between-step` is a valid fallback step for exploratory follow-up questions or intermediate turns that do not start a new declared workflow step.",
-    "Exploratory follow-up questions that collect missing preferences, such as brand, model, merchant, budget, or refundability, must return `in-between-step` unless a step description explicitly says otherwise.",
-    "Whenever the latest agent message asks for one or more preferences, generated user reply options must answer clearly, concisely, and with the smallest useful amount of information needed to move the workflow forward. Prefer direct preferences, selections, or explicit absence of preference. Do not generate replies that ask for suggestions, recommendations, or further exploration unless the latest agent message explicitly requires that.",
-    "Each reply must be written in first person from the user's point of view.",
-    "Never write replies from the agent's point of view.",
-    "Do not generate assistant-style or explanatory replies.",
-    "Each reply must say only what the user would say next to the agent.",
-    "If the agent presents selectable options, replies must map one-to-one to those options.",
-    "Do not add, remove, merge, or change agent-provided options.",
-    "When the latest agent message asks for confirmation to proceed with identity verification, credential sharing, or account access, the generated user replies must be affirmative only.",
-    "Whenever the latest agent message asks whether to use a digital wallet or continue manually, generated user reply options must be affirmative digital-wallet replies only.",
-    "If the detected step is `payment-completed`, return exactly two user replies and only these exact strings: `Thank you very much.` and `Excellent work!`."
-  ],
+
+  "policies": {
+    "step_consumption": [
+      "Declared workflow steps are sequential and cannot be skipped.",
+      "A declared workflow step that already appears as a `step` field on any earlier agent message is fully consumed and exhausted. It must never be returned again for any later agent message, even if the later message appears related to the same topic or uses similar vocabulary.",
+      "If you are tempted to return a step that already exists in the conversation history, stop and return `in-between-step` instead.",
+      "Any returned step must refer only to the latest agent message.",
+      "Return a declared workflow step only if the latest agent message clearly and unambiguously starts that new declared step.",
+      "If the latest agent message is the first reply to the user's initial greeting, return `shopping-agent-introduction`. Do not return `in-between-step` or any later step for that message."
+    ],
+    "in_between_step_usage": [
+      "`in-between-step` is the correct return value when the latest agent message continues the flow but does not clearly start a new declared step.",
+      "This includes: exploratory follow-up questions, collection of missing preferences (brand, model, merchant, budget, refundability), confirmation requests, OTP or verification code prompts, CVV requests, auxiliary input requests, and transition prompts that ask how to obtain credentials (such as choosing between a digital wallet and manual shipping entry, or selecting a wallet provider).",
+      "Always return one to three valid user replies even when returning `in-between-step`."
+    ],
+    "reply_generation": [
+      "Each reply must be written in first person from the user's point of view.",
+      "Never write replies from the agent's point of view.",
+      "Do not generate assistant-style or explanatory replies.",
+      "Each reply must say only what the user would say next to the agent.",
+      "If the agent presents selectable options, replies must map one-to-one to those options. Do not add, remove, merge, or change agent-provided options.",
+      "Whenever the latest agent message asks for one or more preferences, generated user reply options must answer clearly and concisely without omitting any preference the active step explicitly requires.",
+      "Whenever the latest agent message asks whether to use a digital wallet or continue manually, return `in-between-step` and generated user reply options must be affirmative digital-wallet replies only. Never include a manual entry option in the replies.",
+      "When the latest agent message asks for confirmation to proceed with identity verification, credential sharing, or account access, the generated user replies must be affirmative only.",
+      "If the detected step is `payment-completed`, return exactly two user replies and only these exact strings: `Thank you very much.` and `Excellent work!`."
+    ]
+  },
+
   "steps": [
     {
-      "id": "in-between-step",
-      "description": "Special fallback step. This is not one of the main declared workflow steps. Return `in-between-step` when the latest agent message continues the flow but does not clearly start a new declared step. This includes exploratory follow-up questions, collection of missing preferences, confirmation requests, and transition prompts that ask the user how to continue, such as choosing between a digital wallet and manual shipping entry. Replies must still be valid short first-person user messages."
-    },
-    {
       "id": "shopping-agent-introduction",
-      "description": "Step 1 of 5. This step applies only to the first agent reply after the user's initial greeting. Do not return this step if any earlier agent message already has `step: shopping-agent-introduction`. Replies should state the item and also state merchant preference or no preference, whether refundability is required or not, and explicitly ask to see options. Keep replies concise and direct."
+      "order": 1,
+      "description": "Applies only to the first agent reply after the user's initial greeting. The agent introduces itself and asks what the user wants to buy. User replies must include in a single concise first-person message: (1) the item to buy, (2) a merchant preference or an explicit statement that there is none, (3) whether refundability is required or not, and (4) a request to see options."
     },
     {
       "id": "merchant-agent-introduction",
-      "description": "Step 2 of 5. This step follows `shopping-agent-introduction` and precedes `mandates-created`. It applies only when the agent asks the user to confirm already collected purchase details before proceeding to merchant search. Do not use this step for exploratory follow-up questions that collect missing preferences such as brand, model, merchant, budget, or refundability. Return exactly one short affirmative first-person user reply."
+      "order": 2,
+      "description": "Applies when the agent asks the user to confirm already collected purchase details before proceeding to merchant search. Do not use for exploratory follow-up questions that collect missing preferences. Return exactly one short affirmative first-person user reply."
     },
     {
       "id": "mandates-created",
-      "description": "Step 3 of 5. This step follows `merchant-agent-introduction` and precedes `cart-mandate-signed-payment-credentials`. It applies when the agent presents product proposals or purchase options, usually multiple choices. Use this step only if steps 1 and 2 are already supported by the conversation. Return short first-person user replies that map one-to-one to the presented options."
+      "order": 3,
+      "description": "Applies when the agent presents product proposals or purchase options, usually as a numbered list with prices. Use only if steps 1 and 2 are already confirmed in the conversation. Return short first-person user replies that map one-to-one to the presented options."
     },
     {
       "id": "cart-mandate-signed-payment-credentials",
-      "description": "Step 4 of 5. Step 4 of 5. This step follows `mandates-created` and precedes `payment-completed`. It applies to the first agent message after the user has accepted a demo identity or credential-access disclaimer, including simulated account references such as an email login. The disclaimer itself and the user's confirmation are not this step. This step starts only when the next agent message proceeds into concrete checkout or payment preparation. Return short first-person user replies that fit the payment stage."
+      "order": 4,
+      "description": "Applies to the first agent message that reveals data that could only exist if the backend already retrieved the user's credentials — specifically: a real shipping address pulled from the user's account AND a list of specific saved payment methods (e.g. credit cards on file with the last 4 digits). This is always the first agent message after the user confirmed the identity or credential-access disclaimer. The disclaimer message itself and the user's confirmation are NOT this step. Any later agent message asking for purchase confirmation, OTP, or verification code is also NOT this step."
     },
     {
       "id": "payment-completed",
-      "description": "Step 5 of 5. This is the final step. It follows `cart-mandate-signed-payment-credentials`. It applies when the agent returns the receipt or clearly confirms that the purchase is complete. When this step is detected, return exactly two brief first-person user closing messages: `Thank you very much.` and `Excellent work!`."
+      "order": 5,
+      "description": "Applies when the agent returns the receipt or clearly confirms that the purchase is complete. This is the final step. Return exactly two closing replies: `Thank you very much.` and `Excellent work!`."
     }
   ]
 }
