@@ -55,13 +55,13 @@ class WorkflowController:
             conversationDicts = [
                 msg.model_dump(exclude_none=True) for msg in request.conversation
             ]
-            stepId, answers, llmError = self.llmService.generateResponse(
-                {
-                    "workflow": workflowContext,
-                    "conversation": conversationDicts,
-                    "maxAnswers": request.maxAnswers,
-                }
-            )
+            context = {
+                "workflow": workflowContext,
+                "conversation": conversationDicts,
+                "maxAnswers": request.maxAnswers,
+            }
+                
+            stepId, answers, llmError = self.llmService.generateResponse(context)
             return ProcessResponse(
                 workflowId=request.workflowId,
                 stepId=stepId or "",
