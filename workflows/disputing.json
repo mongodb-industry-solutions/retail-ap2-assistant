@@ -1,6 +1,6 @@
 {
   "workflowId": "disputing",
-  "description": "This workflow defines  guided purchase interaction between an Auditor Agent and the user.",
+  "description": "This workflow defines a guided auditing interaction between an Auditor Agent and the user.",
   "goals": [
     "Detect whether the latest auditor agent message starts the next valid declared workflow step for payment dispute resolution.",
     "Return `in-between-step` when the latest agent message does not start a new declared workflow step.", 
@@ -10,6 +10,8 @@
     "Ensure all dispute-related evidence is properly documented and verified."
   ],
   "policies": [
+    "The conversation array will include an initial message from a system role containing metadata required for dispute resolution. This metadata includes payment_id, transaction_id, mandate_id, and other relevant identifiers that the agent must use to construct accurate suggested answers.",
+    "Extract and utilize metadata from the initial system message to provide contextually relevant dispute resolution guidance and user reply suggestions.",
     "Declared workflow steps are sequential and cannot be skipped.", 
     "Any `step` field already present in earlier conversation messages is a confirmed completed step.",
     "Any returned step must refer only to the latest auditor agent message.",
@@ -18,9 +20,11 @@
     "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return one to three valid user replies.",
     "`in-between-step` is a valid fallback step for exploratory follow-up questions, clarifications, or intermediate verification steps that do not start a new declared workflow step.",
     "When the latest agent message asks for a payment ID, transaction ID, or mandate ID to begin audit verification, generated user reply options must provide valid identifiers clearly and concisely.",
-    "If paymentDocument is available, extract payment_id from paymentDocument.payment_id",
-    "If paymentDocument is available, extract transaction_id from paymentDocument.transaction_id if present",
-    "If paymentDocument is available, extract mandate_id from paymentDocument.mandate_id if present",
+    "Extract payment_id from the metadata provided in the initial system message.",
+    "Extract transaction_id from the metadata provided in the initial system message if present.",
+    "Extract intent mandate from the metadata provided in the initial system message if present.",
+    "Extract cart mandate from the metadata provided in the initial system message if present.",
+    "Extract payment mandate from the metadata provided in the initial system message if present.",
     "When the agent presents verification results with signature validation, replies must acknowledge the findings and ask for appropriate next steps (audit trail, further verification, or dispute escalation).",
     "When the agent shows audit trail history, replies must review the findings and either request additional investigation or proceed to test ledger integrity.",
     "When the agent demonstrates ledger immutability by rejecting modification attempts, replies must acknowledge the security protections and ask about dispute resolution options.",
@@ -33,3 +37,6 @@
   ],
   "steps": []
 }
+
+
+

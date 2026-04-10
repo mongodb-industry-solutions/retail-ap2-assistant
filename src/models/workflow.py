@@ -12,7 +12,6 @@ class ProcessRequest(BaseModel):
     workflowId: str
     conversation: list[ConversationMessage]
     maxAnswers: int = Field(default=2, ge=1)
-    paymentDocument: Dict[str, Any] | None = None
 
 
 class ProcessResponse(BaseModel):

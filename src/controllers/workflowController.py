@@ -60,11 +60,7 @@ class WorkflowController:
                 "conversation": conversationDicts,
                 "maxAnswers": request.maxAnswers,
             }
-            # Include payment document in context if provided
-            if request.paymentDocument is not None:
-                context["paymentDocument"] = request.paymentDocument
                 
-            logger.info(f"Context being sent to LLM: {context}")
             stepId, answers, llmError = self.llmService.generateResponse(context)
             return ProcessResponse(
                 workflowId=request.workflowId,
