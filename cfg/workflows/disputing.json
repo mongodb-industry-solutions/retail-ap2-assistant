@@ -1,6 +1,6 @@
 {
   "workflowId": "disputing",
-  "description": "Read the full conversation. Use any earlier `step` fields as confirmed completed steps. Check whether the last message, which is always from the auditor agent, starts the next valid declared workflow step. If yes, return that step id. If not, return `in-between-step`. In all non-error cases, return one to three short user replies for the next turn. Replies must always be written as user messages, never as agent messages. This workflow helps users dispute payments by verifying transactions, examining audit trails, and confirming ledger immutability protections.",
+  "description": "This workflow defines a guided auditing interaction between an Auditor Agent and the user.",
   "goals": [
     "Detect whether the latest auditor agent message starts the next valid declared workflow step for payment dispute resolution.",
     "Return `in-between-step` when the latest agent message does not start a new declared workflow step.", 
@@ -10,13 +10,8 @@
     "Ensure all dispute-related evidence is properly documented and verified."
   ],
   "policies": [
-    "NEVER make up, invent, or fabricate payment_id, transaction_id, or mandate_id values.",
-    "ALWAYS check if paymentDocument is provided in the context.",
-    "If the agent is requesting for 'payment_id' or 'Payment ID' and paymentDocument is available, extract payment_id from paymentDocument.payment_id.",
-    "If the agent is requesting for 'transaction_id' or 'Transaction ID' and paymentDocument is available, extract transaction_id from paymentDocument.transaction_id when needed for audit trail analysis.",
-    "Only ask the user to provide identifiers that cannot be found in the available paymentDocument.",
-    "When paymentDocument contains the required identifiers, proceed directly with the audit process instead of asking the user to provide them.",
-    "If multiple identifiers are available in paymentDocument, use the most appropriate one for the requested verification task.",
+    "The conversation array will include an initial message from a system role containing metadata required for dispute resolution. This metadata includes payment_id, transaction_id, mandate_id, and other relevant identifiers that the agent must use to construct accurate suggested answers.",
+    "Extract and utilize metadata from the initial system message to provide contextually relevant dispute resolution guidance and user reply suggestions.",
     "Declared workflow steps are sequential and cannot be skipped.", 
     "Any `step` field already present in earlier conversation messages is a confirmed completed step.",
     "Any returned step must refer only to the latest auditor agent message.",
@@ -25,6 +20,11 @@
     "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return one to three valid user replies.",
     "`in-between-step` is a valid fallback step for exploratory follow-up questions, clarifications, or intermediate verification steps that do not start a new declared workflow step.",
     "When the latest agent message asks for a payment ID, transaction ID, or mandate ID to begin audit verification, generated user reply options must provide valid identifiers clearly and concisely.",
+    "Extract payment_id from the metadata provided in the initial system message.",
+    "Extract transaction_id from the metadata provided in the initial system message if present.",
+    "Extract intent mandate from the metadata provided in the initial system message if present.",
+    "Extract cart mandate from the metadata provided in the initial system message if present.",
+    "Extract payment mandate from the metadata provided in the initial system message if present.",
     "When the agent presents verification results with signature validation, replies must acknowledge the findings and ask for appropriate next steps (audit trail, further verification, or dispute escalation).",
     "When the agent shows audit trail history, replies must review the findings and either request additional investigation or proceed to test ledger integrity.",
     "When the agent demonstrates ledger immutability by rejecting modification attempts, replies must acknowledge the security protections and ask about dispute resolution options.",
