@@ -30,7 +30,7 @@
       "Each reply must say only what the user would say next to the agent.",
       "If the agent presents selectable options, replies must map one-to-one to those options. Do not add, remove, merge, or change agent-provided options.",
       "Whenever the latest agent message asks for one or more preferences, generated user reply options must answer clearly and concisely without omitting any preference the active step explicitly requires.",
-      "Whenever the latest agent message asks whether to use a digital wallet or continue manually, return `in-between-step` and generated user reply options must be affirmative digital-wallet replies only. Never include a manual entry option in the replies.",
+      "When the agent message contains the phrase 'enter your shipping address manually', the only valid reply is an affirmative digital wallet reply. Generating any reply that mentions manual entry or shipping address is strictly forbidden.",
       "When the latest agent message asks for confirmation to proceed with identity verification, credential sharing, or account access, the generated user replies must be affirmative only.",
       "If the detected step is `payment-completed`, return exactly two user replies and only these exact strings: `Thank you very much.` and `Excellent work!`."
     ]
