@@ -1,0 +1,49 @@
+{
+  "workflowId": "hunter",
+  "description": "Read the full conversation. Use any earlier `step` fields as confirmed completed steps. Check whether the last message, which is always from the agent, starts the next valid declared workflow step. If yes, return that step id. If not, return `in-between-step`. In all non-error cases, return exactly `maxAnswers` short user replies for the next turn. Replies must always be written as user messages, never as agent messages. The workflow is sequential and should move quickly toward the main declared steps without unnecessary exploratory detours.",
+  "goals": [
+    "Detect whether the latest agent message starts the next valid declared workflow step.",
+    "Return `in-between-step` when the latest agent message does not start a new declared workflow step.",
+    "Return exactly `maxAnswers` short user replies for the next turn.",
+    "Keep the flow sequential, simple, and consistent with the latest agent message.",
+    "Move the conversation quickly toward the main workflow steps and avoid unnecessary side exploration.",
+    "The user always proceeds via digital wallet. Suggesting or selecting manual shipping address entry is never allowed.",
+    "OVERRIDE: When the latest agent message contains the exact phrase \"Here is your final cart\" and no card switch exists yet in the conversation history, generate exactly one reply where the user mentions they remembered a bank discount and asks to switch to their other card, never mentioning any card number or brand. In any other case, never generate this reply. This rule applies exactly once per conversation."
+  ],
+  "policies": {
+    "step_consumption": [
+      "Declared workflow steps are sequential and cannot be skipped.",
+      "Any `step` field already present in earlier conversation messages is a confirmed completed step.",
+      "Any returned step must refer only to the latest agent message.",
+      "Return a declared workflow step only if the latest agent message clearly starts a new declared step.",
+      "A declared step already attached to an earlier agent message must not be returned again for a later agent message."
+    ],
+    "in_between_step_usage": [
+      "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return exactly `maxAnswers` valid user replies.",
+      "Avoid unnecessary exploratory turns. Do not open new side topics such as brand, model, or optional preferences unless the latest agent message makes them strictly necessary to continue.",
+      "If the user has already given enough information to continue, prefer replies that move the flow forward instead of expanding the conversation.",
+      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only.",
+      "OVERRIDE: When the latest agent message contains the exact phrase \"Here is your final cart\" and no card switch exists yet in the conversation history, generate exactly one reply where the user mentions they remembered a bank discount and asks to switch to their other card, never mentioning any card number or brand. In any other case, never generate this reply. This rule applies exactly once per conversation."
+    ],
+    "reply_generation": [
+      "Each reply must be written in first person from the user's point of view.",
+      "Never write replies from the agent's point of view.",
+      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only.",
+      "OVERRIDE: When the latest agent message contains the exact phrase \"Here is your final cart\" and no card switch exists yet in the conversation history, generate exactly one reply where the user mentions they remembered a bank discount and asks to switch to their other card, never mentioning any card number or brand. In any other case, never generate this reply. This rule applies exactly once per conversation."
+    ]
+  },
+  "steps": [
+    {
+      "id": "first-hunter-intent-created",
+      "description": "Step 1 of 3. Return this step only when the latest agent message presents the first set of concrete purchase options for the user's already confirmed initial request. At this step, NEVER select any presented option. ALL replies must reject the current offers on price and redefine the purchase intent toward a cheaper alternative product. Preferred wording includes variants such as: `These options are too expensive. I want to change my request. Please show me the cheapest basic coffee maker available, even if it is not a French press.` and `I want to change my request. Please stop looking for a French press and show me the cheapest basic coffee maker available.`"
+    },
+    {
+      "id": "hunter-intent-immutability",
+      "description": "Step 2 of 3. This step follows `first-hunter-intent-created`. Return this step when the latest agent message presents a new set of concrete purchase options based on the user's revised and confirmed request. Do not use this step for the agent message that asks the user to confirm the revised purchase details \u2014 that is `in-between-step`. Use this step only when the agent clearly presents a new numbered list of purchasable options after the revised intent was already accepted by the user. At this step, option selection is allowed."
+    },
+    {
+      "id": "hunter-questions-idempotency",
+      "description": "Step 3 of 3. This is the final step. It follows `hunter-intent-immutability`. Return this step only when the latest agent message returns a purchase receipt or clearly confirms that the transaction is complete. Do not use this step for any earlier message including payment method selection, credential access, or order summaries that have not yet been confirmed as purchased. When this step is detected, return exactly two replies and only these exact strings: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once?' and 'Can you confirm that the payment was not processed twice?'"
+    }
+  ]
+}
