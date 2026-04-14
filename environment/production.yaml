@@ -1,7 +1,7 @@
 # GCP Workload Identity Federation configuration  
 serviceAccount:
   enabled: true
-  name: retail-kanopy-sa
+  name: retail-kanopy-sa-prod
   annotations: {}   # Placeholder for injecting GCP Service Account annotation via Helm/pipeline. Reserved for ServiceAccount annotations injected at deploy time
 
 # Mount GCP credential config AND projected service account token
