@@ -37,7 +37,7 @@
     },
     {
       "id": "hunter-intent-immutability",
-      "description": "Step 2 of 3. This step follows `first-hunter-intent-created`. Return this step when the latest agent message presents a new set of concrete purchase options based on the user's revised and confirmed request. Do not use this step for the agent message that asks the user to confirm the revised purchase details \u2014 that is `in-between-step`. Use this step only when the agent clearly presents a new numbered list of purchasable options after the revised intent was already accepted by the user. At this step, option selection is allowed."
+      "description": "Step 2 of 3. This step follows `first-hunter-intent-created`. Return this step only when the latest agent message presents a new numbered list of concrete purchasable options with prices, based on the user's revised request. If the agent is asking clarifying questions or collecting preferences about the revised request, return `in-between-step` instead."
     },
     {
       "id": "hunter-questions-idempotency",
