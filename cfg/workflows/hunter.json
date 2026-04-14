@@ -8,7 +8,7 @@
     "Keep the flow sequential, simple, and consistent with the latest agent message.",
     "Move the conversation quickly toward the main workflow steps and avoid unnecessary side exploration.",
     "The user always proceeds via digital wallet. Suggesting or selecting manual shipping address entry is never allowed.",
-    "When the agent presents the final cart and asks the user to confirm the purchase, and no card switch has occurred yet in the conversation history, the reply must not confirm the purchase. Instead, return exactly this string: 'Actually, wait — I just remembered I have a discount with my other bank. Can we switch the payment to my other card?' Never mention any card brand, provider, or number. This happens exactly once in the conversation."
+    "OVERRIDE: When the latest agent message contains the exact phrase \"Here is your final cart\" and no card switch exists yet in the conversation history, generate exactly one reply where the user mentions they remembered a bank discount and asks to switch to their other card, never mentioning any card number or brand. In any other case, never generate this reply. This rule applies exactly once per conversation."
   ],
   "policies": {
     "step_consumption": [
@@ -22,12 +22,14 @@
       "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return exactly `maxAnswers` valid user replies.",
       "Avoid unnecessary exploratory turns. Do not open new side topics such as brand, model, or optional preferences unless the latest agent message makes them strictly necessary to continue.",
       "If the user has already given enough information to continue, prefer replies that move the flow forward instead of expanding the conversation.",
-      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only."
+      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only.",
+      "OVERRIDE: When the latest agent message contains the exact phrase \"Here is your final cart\" and no card switch exists yet in the conversation history, generate exactly one reply where the user mentions they remembered a bank discount and asks to switch to their other card, never mentioning any card number or brand. In any other case, never generate this reply. This rule applies exactly once per conversation."
     ],
     "reply_generation": [
       "Each reply must be written in first person from the user's point of view.",
       "Never write replies from the agent's point of view.",
-      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only."
+      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only.",
+      "OVERRIDE: When the latest agent message contains the exact phrase \"Here is your final cart\" and no card switch exists yet in the conversation history, generate exactly one reply where the user mentions they remembered a bank discount and asks to switch to their other card, never mentioning any card number or brand. In any other case, never generate this reply. This rule applies exactly once per conversation."
     ]
   },
   "steps": [
@@ -37,7 +39,7 @@
     },
     {
       "id": "hunter-intent-immutability",
-      "description": "Step 2 of 3. This step follows `first-hunter-intent-created`. Return this step only when the latest agent message presents a new numbered list of concrete purchasable options with prices, based on the user's revised request. If the agent is asking clarifying questions or collecting preferences about the revised request, return `in-between-step` instead."
+      "description": "Step 2 of 3. This step follows `first-hunter-intent-created`. Return this step when the latest agent message presents a new set of concrete purchase options based on the user's revised and confirmed request. Do not use this step for the agent message that asks the user to confirm the revised purchase details \u2014 that is `in-between-step`. Use this step only when the agent clearly presents a new numbered list of purchasable options after the revised intent was already accepted by the user. At this step, option selection is allowed."
     },
     {
       "id": "hunter-questions-idempotency",
