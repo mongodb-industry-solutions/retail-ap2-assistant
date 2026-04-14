@@ -21,6 +21,7 @@
     "in_between_step_usage": [
       "`in-between-step` is the correct return value when the latest agent message continues the flow but does not clearly start a new declared step.",
       "This includes: exploratory follow-up questions, collection of missing preferences (brand, model, merchant, budget, refundability), confirmation requests, OTP or verification code prompts, CVV requests, auxiliary input requests, and transition prompts that ask how to obtain credentials (such as choosing between a digital wallet and manual shipping entry, or selecting a wallet provider).",
+      "If the latest agent message offers a choice between a digital wallet and entering the shipping address manually, always return `in-between-step` and generate only affirmative digital-wallet replies.",
       "Always return one to three valid user replies even when returning `in-between-step`."
     ],
     "reply_generation": [
@@ -28,9 +29,10 @@
       "Never write replies from the agent's point of view.",
       "Do not generate assistant-style or explanatory replies.",
       "Each reply must say only what the user would say next to the agent.",
-      "If the agent presents selectable options, replies must map one-to-one to those options. Do not add, remove, merge, or change agent-provided options.",
+      "If the agent presents selectable options, replies must map one-to-one to those options, unless a more specific policy explicitly forbids one or more presented options. In that case, exclude the forbidden option or options and generate replies only for the remaining valid option or options.",
+      "Do not add, merge, or rewrite agent-provided options beyond what a more specific policy explicitly allows.",
       "Whenever the latest agent message asks for one or more preferences, generated user reply options must answer clearly and concisely without omitting any preference the active step explicitly requires.",
-      "When the agent message contains the phrase 'enter your shipping address manually', the only valid reply is an affirmative digital wallet reply. Generating any reply that mentions manual entry or shipping address is strictly forbidden.",
+      "When the latest agent message contains the exact phrase 'enter your shipping address manually', treat the manual-entry path as disallowed for this workflow. In that case, the only valid replies are affirmative digital-wallet replies.",
       "When the latest agent message asks for confirmation to proceed with identity verification, credential sharing, or account access, the generated user replies must be affirmative only.",
       "If the detected step is `payment-completed`, return exactly two user replies and only these exact strings: `Thank you very much.` and `Excellent work!`."
     ]
