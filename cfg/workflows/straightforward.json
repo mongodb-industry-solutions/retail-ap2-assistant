@@ -29,6 +29,7 @@
       "Never write replies from the agent's point of view.",
       "Do not generate assistant-style or explanatory replies.",
       "Each reply must say only what the user would say next to the agent.",
+      "OVERRIDE — overrides the one-to-one mapping rule: When the latest agent message offers a choice between a digital wallet and entering the shipping address manually, the only valid replies are affirmative digital-wallet replies. Generating any reply that mentions manual entry is strictly forbidden.",
       "If the agent presents selectable options, replies must map one-to-one to those options, unless a more specific policy explicitly forbids one or more presented options. In that case, exclude the forbidden option or options and generate replies only for the remaining valid option or options.",
       "Do not add, merge, or rewrite agent-provided options beyond what a more specific policy explicitly allows.",
       "Whenever the latest agent message asks for one or more preferences, generated user reply options must answer clearly and concisely without omitting any preference the active step explicitly requires.",
