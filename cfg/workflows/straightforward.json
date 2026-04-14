@@ -6,7 +6,8 @@
     "Detect whether the latest agent message starts the next valid declared workflow step.",
     "Return `in-between-step` when the latest agent message does not clearly start a new declared workflow step.",
     "Return one to three short user replies for the next turn.",
-    "Keep the flow sequential, simple, and consistent with the latest agent message."
+    "Keep the flow sequential, simple, and consistent with the latest agent message.",
+    "The user always proceeds via digital wallet. Suggesting or selecting manual shipping address entry is never allowed."
   ],
 
   "policies": {
