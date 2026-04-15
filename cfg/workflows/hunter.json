@@ -1,25 +1,25 @@
 {
   "workflowId": "hunter",
-  "description": "Read the full conversation. Use any earlier `step` fields as confirmed completed steps. Check whether the last message, which is always from the agent, starts the next valid declared workflow step. If yes, return that step id. If not, return `in-between-step`. In all non-error cases, return exactly `maxAnswers` short user replies for the next turn. Replies must always be written as user messages, never as agent messages. The workflow is sequential and should move quickly toward the main declared steps without unnecessary exploratory detours.",
+  "description": "Read the full conversation. Use any earlier `step` fields as confirmed completed steps. Check whether the last message, which is always from the agent, starts the next valid declared workflow step. If yes, return that step id. If not, return `in-between-step`. Replies must always be written as user messages, never as agent messages. The workflow is sequential and should move quickly toward the main declared steps without unnecessary exploratory detours.",
   "goals": [
     "Detect whether the latest agent message starts the next valid declared workflow step.",
     "Return `in-between-step` when the latest agent message does not start a new declared workflow step.",
-    "Return exactly `maxAnswers` short user replies for the next turn.",
     "Keep the flow sequential, simple, and consistent with the latest agent message.",
     "Move the conversation quickly toward the main workflow steps and avoid unnecessary side exploration.",
     "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider.",
-    "When all declared workflow steps have been consumed, close the conversation gracefully without initiating new processes or purchases."
+    "The only step that can appear multiple times in the conversation history is `in-between-step`. All declared workflow steps — `first-hunter-intent-created`, `hunter-intent-immutability`, `hunter-card-switch`, and `hunter-questions-idempotency` — can each appear only once. If any of these steps already appears in the conversation history, it is fully consumed and must never be returned again.",
+    "After `hunter-card-switch`, do not treat the purchase receipt as the final declared step. The receipt should first lead to user concern about a possible duplicate charge, and the final declared step should be assigned only when the agent responds to that concern.",
+    "When all declared workflow steps have been consumed, the workflow must be considered closed. Do not reopen the flow, do not start a new purchase, and do not ask new questions. Return only a short thank-you message that closes the conversation."
   ],
   "policies": {
     "step_consumption": [
       "Declared workflow steps are sequential and cannot be skipped.",
-      "A declared workflow step that already appears as a `step` field on any earlier agent message is fully consumed and exhausted. It must never be returned again for any later agent message, even if the later message appears related to the same topic or uses similar vocabulary.",
-      "If you are tempted to return a step that already exists in the conversation history, stop and return `in-between-step` instead.",
       "Any returned step must refer only to the latest agent message.",
-      "Return a declared workflow step only if the latest agent message clearly and unambiguously starts that new declared step."
+      "Return a declared workflow step only if the latest agent message clearly and unambiguously starts that new declared step.",
+      "Do not assign `hunter-questions-idempotency` to the agent message that delivers the purchase receipt after `hunter-card-switch`. Assign this step only to a later agent message that directly answers or addresses the user's concern that the payment may have been processed more than once."
     ],
     "in_between_step_usage": [
-      "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return exactly `maxAnswers` valid user replies.",
+      "If the latest agent message does not start a new declared workflow step, return `in-between-step`",
       "Avoid unnecessary exploratory turns. Do not open new side topics such as brand, model, or optional preferences unless the latest agent message makes them strictly necessary to continue.",
       "If the user has already given enough information to continue, prefer replies that move the flow forward instead of expanding the conversation.",
       "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider.",
@@ -28,7 +28,9 @@
     "reply_generation": [
       "Each reply must be written in first person from the user's point of view.",
       "Never write replies from the agent's point of view.",
-      "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider."
+      "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider.",
+      "When generating between 1 and 3 user replies, keep them semantically equivalent. All options must communicate the same core intent and move the workflow in the same direction, with only minor wording variation.",
+      "When the latest agent message delivers the purchase receipt after `hunter-card-switch`, generate 1 to 3 semantically equivalent user replies expressing concern about the card change and asking for confirmation that the payment was processed only once. Example: 'I am not comfortable with the card change we made. How can you assure me that the purchase was processed only once and not twice?'"
     ]
   },
   "steps": [
@@ -50,7 +52,7 @@
     {
       "id": "hunter-questions-idempotency",
       "order": 4,
-      "description": "Step 4 of 4. This is the final step. It follows `hunter-card-switch`. Return this step when the latest agent message returns a purchase receipt or clearly confirms that the transaction is complete. When this step is detected, return exactly two replies and only these exact strings: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once?' and 'Can you confirm that the payment was not processed twice?' Once this step appears in the conversation history, the workflow is complete \u2014 return `in-between-step` with exactly one reply: 'Ok, that is clear. Thank you very much.'"
+      "description": "Step 4 of 4. This is the final declared step. It follows `hunter-card-switch`. Do not return this step when the latest agent message only delivers the purchase receipt or confirms that the transaction is complete. That receipt message is not itself this step. Return `hunter-questions-idempotency` only when the latest agent message directly answers or addresses the user's concern that the payment may have been processed more than once after the card switch. Once this step appears in the conversation history, the workflow is complete. Any later message must return `in-between-step`."
     }
   ]
 }
