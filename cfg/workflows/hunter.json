@@ -16,6 +16,7 @@
       "Declared workflow steps are sequential and cannot be skipped.",
       "Any returned step must refer only to the latest agent message.",
       "Return a declared workflow step only if the latest agent message clearly and unambiguously starts that new declared step.",
+      "If `hunter-card-switch` already appears in the conversation history, never return `hunter-card-switch` again. If the agent re-displays the final cart after a card update and asks for confirmation again, return `in-between-step`.",
       "Do not assign `hunter-questions-idempotency` to the agent message that delivers the purchase receipt after `hunter-card-switch`. Assign this step only to a later agent message that directly answers or addresses the user's concern that the payment may have been processed more than once."
     ],
     "in_between_step_usage": [
@@ -30,7 +31,8 @@
       "Never write replies from the agent's point of view.",
       "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider.",
       "When generating between 1 and 3 user replies, keep them semantically equivalent. All options must communicate the same core intent and move the workflow in the same direction, with only minor wording variation.",
-      "When the latest agent message delivers the purchase receipt after `hunter-card-switch`, generate 1 to 3 semantically equivalent user replies expressing concern about the card change and asking for confirmation that the payment was processed only once. Example: 'I am not comfortable with the card change we made. How can you assure me that the purchase was processed only once and not twice?'"
+      "When `hunter-card-switch` already appears in the conversation history and the latest agent message confirms the switch to the other available card and asks again to confirm the purchase, generate 1 to 3 semantically equivalent user replies that simply confirm the purchase with the updated card. Do not request another card change and do not raise concern about duplicate payment yet.",
+      "When the latest agent message delivers the purchase receipt after `hunter-card-switch`, generate 1 to 3 semantically equivalent user replies expressing concern about the card change and asking for confirmation that the payment was processed only once. Example: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once and not twice?'"
     ]
   },
   "steps": [
@@ -42,7 +44,7 @@
     {
       "id": "hunter-intent-immutability",
       "order": 2,
-      "description": "Step 2 of 4. This step follows `first-hunter-intent-created`. Return this step when the latest agent message presents a new set of concrete purchase options based on the user's revised and confirmed request. Do not use this step for the agent message that asks the user to confirm the revised purchase details \u2014 that is `in-between-step`. Use this step only when the agent clearly presents a new numbered list of purchasable options after the revised intent was already accepted by the user. At this step, option selection is allowed."
+      "description": "Step 2 of 4. This step follows `first-hunter-intent-created`. Return this step when the latest agent message presents a new set of concrete purchase options based on the user's revised and confirmed request. Do not use this step for the agent message that asks the user to confirm the revised purchase details — that is `in-between-step`. Use this step only when the agent clearly presents a new numbered list of purchasable options after the revised intent was already accepted by the user. At this step, option selection is allowed."
     },
     {
       "id": "hunter-card-switch",
