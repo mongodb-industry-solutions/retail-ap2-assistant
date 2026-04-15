@@ -1,74 +1,49 @@
 {
-    "workflowId": "hunter",
-    "description": "Read the full conversation. Use any earlier `step` fields as confirmed completed steps. Check whether the last message, which is always from the agent, starts the next valid declared workflow step. If yes, return that step id. If not, return `in-between-step`. In all non-error cases, return exactly `maxAnswers` short user replies for the next turn. Replies must always be written as user messages, never as agent messages. The workflow is sequential and should move quickly toward the main declared steps without unnecessary exploratory detours.",
-    "goals": [
-      "Detect whether the latest agent message starts the next valid declared workflow step.",
-      "Return `in-between-step` when the latest agent message does not start a new declared workflow step.",
-      "Return exactly `maxAnswers` short user replies for the next turn.",
-      "Keep the flow sequential, simple, and consistent with the latest agent message.",
-      "Reflect a price-driven shopper who keeps refining the request in search of a better deal.",
-      "Show that meaningful requirement changes should lead to a new intent rather than rewriting an earlier one.",
-      "Support a clear narrative about digital contracts, immutability, traceability, and idempotency.",
-      "Move the conversation quickly toward the main workflow steps and avoid unnecessary side exploration."
-    ],
-    "policies": [
+  "workflowId": "hunter",
+  "description": "Read the full conversation. Use any earlier `step` fields as confirmed completed steps. Check whether the last message, which is always from the agent, starts the next valid declared workflow step. If yes, return that step id. If not, return `in-between-step`. In all non-error cases, return exactly `maxAnswers` short user replies for the next turn. Replies must always be written as user messages, never as agent messages. The workflow is sequential and should move quickly toward the main declared steps without unnecessary exploratory detours.",
+  "goals": [
+    "Detect whether the latest agent message starts the next valid declared workflow step.",
+    "Return `in-between-step` when the latest agent message does not start a new declared workflow step.",
+    "Return exactly `maxAnswers` short user replies for the next turn.",
+    "Keep the flow sequential, simple, and consistent with the latest agent message.",
+    "Move the conversation quickly toward the main workflow steps and avoid unnecessary side exploration.",
+    "The user always proceeds via digital wallet. Suggesting or selecting manual shipping address entry is never allowed.",
+    "OVERRIDE: When the latest agent message contains the exact phrase \"Here is your final cart\" and no card switch exists yet in the conversation history, generate exactly one reply where the user mentions they remembered a bank discount and asks to switch to their other card, never mentioning any card number or brand. In any other case, never generate this reply. This rule applies exactly once per conversation."
+  ],
+  "policies": {
+    "step_consumption": [
       "Declared workflow steps are sequential and cannot be skipped.",
       "Any `step` field already present in earlier conversation messages is a confirmed completed step.",
       "Any returned step must refer only to the latest agent message.",
       "Return a declared workflow step only if the latest agent message clearly starts a new declared step.",
-      "A declared step already attached to an earlier agent message must not be returned again for a later agent message.",
+      "A declared step already attached to an earlier agent message must not be returned again for a later agent message."
+    ],
+    "in_between_step_usage": [
       "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return exactly `maxAnswers` valid user replies.",
-      "Whenever the latest agent message asks for one or more preferences, generated user reply options must answer clearly, concisely, and with the smallest useful amount of information needed to move the workflow forward. In the hunter workflow, treat optional early clarifications as non-blocking and answer them in the fastest way that preserves forward progress.",
-      "Prefer direct preferences, selections, confirmations, or explicit absence of preference.",
-      "Do not generate replies that ask for suggestions, recommendations, or further exploration unless the latest agent message explicitly requires that.",
+      "Avoid unnecessary exploratory turns. Do not open new side topics such as brand, model, or optional preferences unless the latest agent message makes them strictly necessary to continue.",
+      "If the user has already given enough information to continue, prefer replies that move the flow forward instead of expanding the conversation.",
+      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only.",
+      "OVERRIDE: When the latest agent message contains the exact phrase \"Here is your final cart\" and no card switch exists yet in the conversation history, generate exactly one reply where the user mentions they remembered a bank discount and asks to switch to their other card, never mentioning any card number or brand. In any other case, never generate this reply. This rule applies exactly once per conversation."
+    ],
+    "reply_generation": [
       "Each reply must be written in first person from the user's point of view.",
       "Never write replies from the agent's point of view.",
-      "Each reply must say only what the user would say next to the agent.",
-      "If the agent presents selectable options, replies may map one-to-one to those options only when the current workflow step expects option selection. Do not apply this rule when the hunter flow requires price objection or intent refinement.",
-      "Do not add, remove, merge, or change agent-provided options when the current step expects the user to select among them. In the hunter flow, if the step requires price objection and intent refinement, the user should not select or rewrite the presented options.",
-      "In the hunter workflow, avoid unnecessary exploratory turns. Do not open new side topics such as brand, model, or optional preferences unless the latest agent message makes them strictly necessary to continue.",
-      "In the hunter workflow, if the user has already given enough information to continue, prefer replies that move the flow forward instead of expanding the conversation.",
-      "In the hunter workflow, treat optional preferences such as brand or model as non-blocking unless the latest agent message clearly makes them required for the next step.",
-      "In the hunter workflow, prefer progressing toward confirmation and option generation over extended preference clarification.",
-      "In the hunter workflow, when the agent asks whether refundability is required or only a preference, answer in the most flow-forward way possible: treat it as a preference, allow cheaper non-refundable options, and do not introduce any other preferences or exploration. This turn remains `in-between-step`.",
-      "In the hunter workflow, do not keep refining the initial request through multiple optional clarifications. Resolve early clarification questions with the minimum useful answer and move quickly toward confirmation of purchase details and first option generation.",
-      "For the agent message that asks the user to confirm the initial purchase details, return exactly `maxAnswers` short affirmative user replies. Always confirm. Do not generate questions, hesitation, or changes. This turn remains `in-between-step`.",
-      "For `in-between-step` in the hunter workflow, when the latest agent message asks unnecessary follow-up questions about optional preferences, answer in the most minimal way possible and steer the flow back toward purchase confirmation or option generation.",
-      "When `first-hunter-intent-created` is detected, return exactly `maxAnswers` user replies. Do not select any presented option. Each reply must reject the current offers on price and clearly revise the purchase intent toward a cheaper alternative product, not just a cheaper version of the same French press. Do not return a standalone price objection. Keep the replies short and semantically aligned.",
-      "For `first-hunter-intent-created`, each returned reply must be complete on its own. Do not split the intended meaning across multiple replies.",
-      "For `first-hunter-intent-created`, do not return a reply that only objects to price. Every reply must include the revised request itself.",
-      "Preferred wording for `first-hunter-intent-created` includes variants such as: `These options are too expensive. I want to change my request. Please show me the cheapest basic coffee maker available, even if it is not a French press.` and `I want to change my request. Please stop looking for a French press and show me the cheapest basic coffee maker available.`",
-      "When the latest agent message both acknowledges a revised request and asks the user to confirm updated purchase details, prefer `hunter-intent-immutability` over `in-between-step`.",
-      "In the hunter workflow, if the user changes a core requirement to pursue a cheaper path and the agent reflects that revised request back with updated purchase details, treat that message as `hunter-intent-immutability`.",
-      "When `hunter-intent-immutability` is detected, return exactly `maxAnswers` short affirmative first-person user replies that accept continuing with the revised request.",
-      "When `hunter-intent-immutability` is detected and the latest agent message asks the user to confirm revised purchase details, return exactly `maxAnswers` short affirmative user replies. Always confirm. Do not generate hesitation, negotiation, or further changes.",
-      "When `second-hunter-intent-created` is detected, replies may select among the newly presented options because they are already based on the revised and confirmed intent.",
-      "Whenever the latest agent message asks whether to use a digital wallet or continue manually, generated user reply options must be affirmative digital-wallet replies only."
-    ],
-    "steps": [
-      {
-        "id": "in-between-step",
-        "description": "Special fallback step. This is not one of the main declared workflow steps. Return `in-between-step` when the latest agent message continues the flow but does not clearly start a new declared workflow step. In the hunter workflow, keep this step minimal and use it to move quickly toward the next main step. Use short first-person user replies that provide only the minimum information needed to continue. Do not use this step to expand optional preferences or open side exploration unless the latest agent message makes that strictly necessary."
-      },
-      {
-        "id": "first-hunter-intent-created",
-        "description": "Step 1 of 5. This is the first detectable main step in the hunter workflow and it precedes `hunter-intent-immutability`. Return this step only when the latest agent message presents the first set of concrete purchase options for the user's already confirmed initial request. Do not use this step for earlier clarifications, the confirmation request itself, or the user's confirmation reply. At this step, never select any presented option. Return exactly `maxAnswers` short first-person user replies that reject the current offers on price and clearly redefine the purchase intent toward a cheaper alternative product, not just a cheaper version of the same French press."
-      },
-      {
-        "id": "hunter-intent-immutability",
-        "description": "Step 2 of 5. This step follows `first-hunter-intent-created` and precedes `second-hunter-intent-created`. Return this step when the latest agent message clearly acknowledges that the user must change a core purchase requirement in order to continue with a cheaper path, and treats that change as a revised request rather than as an edit of previous cart options. This includes cases where the same agent message both introduces the revised request path and asks the user to confirm the updated purchase details. Return exactly `maxAnswers` short affirmative first-person user replies that accept continuing with the revised request."
-      },
-      {
-        "id": "second-hunter-intent-created",
-        "description": "Step 3 of 5. This step follows `hunter-intent-immutability` and precedes `hunter-card-purchase-change`. Return this step when the latest agent message presents a new set of concrete purchase options based on the user's revised and confirmed request after the user has changed the purchase intent toward a cheaper alternative product. Do not use this step for the message that asks the user to confirm the revised purchase details. Use this step only when the latest agent message clearly reflects a new intent that has already been accepted by the user and now produces a new set of cart options. Return exactly `maxAnswers` short first-person user replies that react to the presented options. At this step, option selection is allowed."
-      },
-      {
-        "id": "hunter-card-purchase-change",
-        "description": "Step 4 of 5. This step follows `second-hunter-intent-created` and precedes `hunter-questions-idempotency`. Return this step when the latest agent message clearly confirms that the shopper completed the purchase after selecting one of the revised options, including cases where the payment succeeds and the order or payment reference is returned. Return exactly `maxAnswers` short first-person user replies that fit an immediate post-purchase turn, such as acknowledging completion or introducing a remembered payment concern."
-      },
-      {
-        "id": "hunter-questions-idempotency",
-        "description": "Step 5 of 5. This is the final step. It follows `hunter-card-purchase-change`. Return this step when the latest agent message explains that a revisited payment action, such as changing to a different card after remembering a bank discount, did not create a second transaction and instead resolves to the existing valid payment result or payment reference. This step introduces idempotency as protection against duplicate business actions. When this step is detected, return exactly two brief first-person user messages and only these exact strings: `How can I verify that I was charged only once?` and `Can you confirm that the payment was not processed twice?`."
-      }
+      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only.",
+      "OVERRIDE: When the latest agent message contains the exact phrase \"Here is your final cart\" and no card switch exists yet in the conversation history, generate exactly one reply where the user mentions they remembered a bank discount and asks to switch to their other card, never mentioning any card number or brand. In any other case, never generate this reply. This rule applies exactly once per conversation."
     ]
-  }
+  },
+  "steps": [
+    {
+      "id": "first-hunter-intent-created",
+      "description": "Step 1 of 3. Return this step only when the latest agent message presents the first set of concrete purchase options for the user's already confirmed initial request. At this step, NEVER select any presented option. ALL replies must reject the current offers on price and redefine the purchase intent toward a cheaper alternative product. Preferred wording includes variants such as: `These options are too expensive. I want to change my request. Please show me the cheapest basic coffee maker available, even if it is not a French press.` and `I want to change my request. Please stop looking for a French press and show me the cheapest basic coffee maker available.`"
+    },
+    {
+      "id": "hunter-intent-immutability",
+      "description": "Step 2 of 3. This step follows `first-hunter-intent-created`. Return this step when the latest agent message presents a new set of concrete purchase options based on the user's revised and confirmed request. Do not use this step for the agent message that asks the user to confirm the revised purchase details \u2014 that is `in-between-step`. Use this step only when the agent clearly presents a new numbered list of purchasable options after the revised intent was already accepted by the user. At this step, option selection is allowed."
+    },
+    {
+      "id": "hunter-questions-idempotency",
+      "description": "Step 3 of 3. This is the final step. It follows `hunter-intent-immutability`. Return this step only when the latest agent message returns a purchase receipt or clearly confirms that the transaction is complete. Do not use this step for any earlier message including payment method selection, credential access, or order summaries that have not yet been confirmed as purchased. When this step is detected, return exactly two replies and only these exact strings: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once?' and 'Can you confirm that the payment was not processed twice?'"
+    }
+  ]
+}
