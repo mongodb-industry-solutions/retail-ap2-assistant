@@ -45,12 +45,12 @@
     {
       "id": "hunter-card-switch",
       "order": 3,
-      "description": "Step 3 of 4. This step follows `hunter-intent-immutability`. Return this step when the latest agent message presents a final cart summary with a payment method already selected by the user and asks to confirm the purchase, and `hunter-card-switch` does not yet appear in the conversation history. Do not use this step when the agent is still asking the user to choose a payment method \u2014 that is `in-between-step`. Do not return this step if `hunter-card-switch` already appears in the conversation history \u2014 return `in-between-step` instead. At this step, generate exactly `maxAnswers` replies where the user remembers they have a better deal with their other bank and asks to switch to the other available card. Do not confirm the purchase."
+      "description": "Step 3 of 4. This step follows `hunter-intent-immutability`. Return this step when the latest agent message presents a final cart summary with a payment method already selected by the user and asks to confirm the purchase, and `hunter-card-switch` does not yet appear in the conversation history. Do not use this step when the agent is still asking the user to choose a payment method, that is `in-between-step`. At this step, generate replies where the user remembers they have a better deal with their other bank and asks to switch to the other available card. Do not confirm the purchase. You will use this step only ones in the whole conversation"
     },
     {
       "id": "hunter-questions-idempotency",
       "order": 4,
-      "description": "Step 4 of 4. This is the final step. It follows `hunter-card-switch`. Return this step when the latest agent message returns a purchase receipt or clearly confirms that the transaction is complete. When this step is detected, return exactly two replies and only these exact strings: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once?' and 'Can you confirm that the payment was not processed twice?' Once this step appears in the conversation history, the workflow is complete \u2014 return `in-between-step` with exactly one reply: 'Ok, that is clear. Thank you very much.'"
+      "description": "Step 4 of 4. This is the final step. It follows `hunter-card-switch`. Return this step when the latest agent message returns a purchase receipt or clearly confirms that the transaction is complete. When this step is detected, return exactly two replies and only these exact strings: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once?' and 'Can you confirm that the payment was not processed twice?' Once this step appears in the conversation history, the workflow is complete."
     }
   ]
 }
