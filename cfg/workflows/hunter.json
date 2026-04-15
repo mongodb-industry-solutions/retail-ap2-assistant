@@ -47,7 +47,7 @@
     {
       "id": "hunter-card-switch",
       "order": 3,
-      "description": "Step 3 of 4. This step follows `hunter-intent-immutability`. Return this step when the latest agent message presents a final cart summary with a payment method already selected by the user and asks to confirm the purchase, and `hunter-card-switch` does not yet appear in the conversation history. Do not use this step when the agent is still asking the user to choose a payment method, that is `in-between-step`. Do not return this step if `hunter-card-switch` already appears in the conversation history \u2014 return `in-between-step` instead. At this step, generate replies where the user remembers they have a better deal with their other bank and asks to switch to the other available card. Do not confirm the purchase."
+      "description": "Step 3 of 4. This step follows `hunter-intent-immutability`. Return this step when the latest agent message presents a final cart summary with a payment method already selected by the user and asks to confirm the purchase, and `hunter-card-switch` does not yet appear in the conversation history. Do not use this step when the agent is still asking the user to choose a payment method, that is `in-between-step`. Do not return this step if `hunter-card-switch` already appears in the conversation history — return `in-between-step` instead. At this step, generate replies where the user says they just remembered the other available card has a better bank offer or discount and asks to switch to that other card already shown in the flow. Do not ask to add a new card, do not ask for a different payment method outside the presented options, and do not confirm the purchase."
     },
     {
       "id": "hunter-questions-idempotency",
