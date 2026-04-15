@@ -1,39 +1,69 @@
 {
   "workflowId": "disputing",
-  "description": "This workflow defines a guided auditing interaction between an Auditor Agent and the user.",
+  "description": "Read the full conversation. Use any earlier `step` fields as confirmed and exhausted steps. Check whether the last message, which is always from the agent, starts the next valid declared workflow step. If yes, return that step id. If not, return `in-between-step`. In all non-error cases, return one to three short user replies for the next turn. Replies must always be written as user messages, never as agent messages. The workflow is sequential and ends only when the dispute is resolved.",
+
   "goals": [
     "Detect whether the latest auditor agent message starts the next valid declared workflow step for payment dispute resolution.",
-    "Return `in-between-step` when the latest agent message does not start a new declared workflow step.", 
+    "Return `in-between-step` when the latest agent message does not start a new declared workflow step.",
     "Return one to three short user replies for the next turn that advance the dispute verification process.",
     "Guide users through systematic payment verification and audit trail examination.",
     "Keep the flow sequential and dispute-focused, building evidence for resolution.",
     "Ensure all dispute-related evidence is properly documented and verified."
   ],
-  "policies": [
-    "The conversation array will include an initial message from a system role containing metadata required for dispute resolution. This metadata includes payment_id, transaction_id, mandate_id, and other relevant identifiers that the agent must use to construct accurate suggested answers.",
-    "Extract and utilize metadata from the initial system message to provide contextually relevant dispute resolution guidance and user reply suggestions.",
-    "Declared workflow steps are sequential and cannot be skipped.", 
-    "Any `step` field already present in earlier conversation messages is a confirmed completed step.",
-    "Any returned step must refer only to the latest auditor agent message.",
-    "Return a declared workflow step only if the latest agent message clearly starts a new declared step.",
-    "A declared step already attached to an earlier agent message must not be returned again for a later agent message.",
-    "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return one to three valid user replies.",
-    "`in-between-step` is a valid fallback step for exploratory follow-up questions, clarifications, or intermediate verification steps that do not start a new declared workflow step.",
-    "When the latest agent message asks for a payment ID, transaction ID, or mandate ID to begin audit verification, generated user reply options must provide valid identifiers clearly and concisely.",
-    "Extract payment_id from the metadata provided in the initial system message.",
-    "Extract transaction_id from the metadata provided in the initial system message if present.",
-    "Extract intent mandate from the metadata provided in the initial system message if present.",
-    "Extract cart mandate from the metadata provided in the initial system message if present.",
-    "Extract payment mandate from the metadata provided in the initial system message if present.",
-    "When the agent presents verification results with signature validation, replies must acknowledge the findings and ask for appropriate next steps (audit trail, further verification, or dispute escalation).",
-    "When the agent shows audit trail history, replies must review the findings and either request additional investigation or proceed to test ledger integrity.",
-    "When the agent demonstrates ledger immutability by rejecting modification attempts, replies must acknowledge the security protections and ask about dispute resolution options.",
-    "Each reply must be written in first person from the user's point of view as someone seeking to resolve a payment dispute.",
-    "Never write replies from the agent's point of view.",
-    "Do not generate assistant-style or explanatory replies.",
-    "Each reply must say only what a disputing user would say next to the auditor agent.", 
-    "Replies should maintain a professional tone appropriate for financial dispute resolution.",
-    "If the detected step is `dispute-resolution-complete`, return exactly two user replies: `Thank you for the thorough verification.` and `This evidence will help resolve the dispute.`"
-  ],
-  "steps": []
+
+  "policies": {
+    "step_consumption": [
+      "Declared workflow steps are sequential and cannot be skipped.",
+      "A declared workflow step that already appears as a `step` field on any earlier agent message is fully consumed and exhausted. It must never be returned again for any later agent message, even if the later message appears related to the same topic or uses similar vocabulary.",
+      "If you are tempted to return a step that already exists in the conversation history, stop and return `in-between-step` instead.",
+      "Any returned step must refer only to the latest agent message.",
+      "Return a declared workflow step only if the latest agent message clearly and unambiguously starts that new declared step."
+    ],
+    "in_between_step_usage": [
+      "`in-between-step` is the correct return value when the latest agent message continues the flow but does not clearly start a new declared step.",
+      "This includes: exploratory follow-up questions, clarifications, or intermediate verification steps that do not start a new declared workflow step.",
+      "When the latest agent message asks for a payment ID, transaction ID, or mandate ID to begin audit verification, return `in-between-step` and generate replies that provide the relevant identifiers from the metadata in the initial system message.",
+      "Always return one to three valid user replies even when returning `in-between-step`."
+    ],
+    "reply_generation": [
+      "Each reply must be written in first person from the user's point of view as someone seeking to resolve a payment dispute.",
+      "Never write replies from the agent's point of view.",
+      "Do not generate assistant-style or explanatory replies.",
+      "Each reply must say only what a disputing user would say next to the auditor agent.",
+      "The conversation array will include an initial message from a system role containing metadata required for dispute resolution. This metadata includes payment_id, transaction_id, mandate_id, and other relevant identifiers. Extract and use these to provide contextually relevant replies.",
+      "When the agent presents verification results with signature validation, replies must acknowledge the findings and ask for appropriate next steps.",
+      "When the agent shows audit trail history, replies must review the findings and either request additional investigation or proceed to test ledger integrity.",
+      "When the agent demonstrates ledger immutability by rejecting modification attempts, replies must acknowledge the security protections and ask about dispute resolution options.",
+      "Replies should maintain a professional tone appropriate for financial dispute resolution.",
+      "If the detected step is `dispute-resolution-complete`, return exactly two user replies and only these exact strings: `Thank you for the thorough verification.` and `This evidence will help resolve the dispute.`"
+    ]
+  },
+
+  "steps": [
+    {
+      "id": "dispute-initiated",
+      "order": 1,
+      "description": "TODO"
+    },
+    {
+      "id": "dispute-step-2",
+      "order": 2,
+      "description": "TODO"
+    },
+    {
+      "id": "dispute-step-3",
+      "order": 3,
+      "description": "TODO"
+    },
+    {
+      "id": "dispute-step-4",
+      "order": 4,
+      "description": "TODO"
+    },
+    {
+      "id": "dispute-resolution-complete",
+      "order": 5,
+      "description": "Final step. Applies when the agent confirms the dispute has been fully resolved and all evidence has been verified. Return exactly two closing replies: `Thank you for the thorough verification.` and `This evidence will help resolve the dispute.`"
+    }
+  ]
 }
