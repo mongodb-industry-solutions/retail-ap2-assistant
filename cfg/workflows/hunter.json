@@ -7,7 +7,7 @@
     "Return exactly `maxAnswers` short user replies for the next turn.",
     "Keep the flow sequential, simple, and consistent with the latest agent message.",
     "Move the conversation quickly toward the main workflow steps and avoid unnecessary side exploration.",
-    "The user always proceeds via digital wallet. Suggesting or selecting manual shipping address entry is never allowed.",
+    "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that in a single message: confirm the digital wallet preference, specify Google Pay as the wallet provider, and accept credential sharing with the AI Agent.",
     "When all declared workflow steps have been consumed, close the conversation gracefully without initiating new processes or purchases."
   ],
   "policies": {
@@ -28,7 +28,7 @@
     "reply_generation": [
       "Each reply must be written in first person from the user's point of view.",
       "Never write replies from the agent's point of view.",
-      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only."
+      "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that in a single message: confirm the digital wallet preference, specify Google Pay as the wallet provider, and accept credential sharing with the AI Agent."
     ]
   },
   "steps": [
