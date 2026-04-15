@@ -43,7 +43,7 @@
     {
       "id": "hunter-card-switch",
       "order": 3,
-      "description": "Step 3 of 4. This step follows `hunter-intent-immutability`. Return this step when the latest agent message presents a final cart summary that includes a selected payment method and asks the user to confirm the purchase. At this step, return exactly one reply and only this exact string: 'I just remembered I have a discount with my other bank. Can we switch to my other card?' Do not confirm the purchase. Do not mention any card number or brand. This step applies exactly once per conversation."
+      "description": "Step 3 of 4. This step follows `hunter-intent-immutability`. Return this step when the latest agent message presents a final cart summary that includes a selected payment method and asks the user to confirm the purchase, and no card switch has occurred yet in the conversation history. At this step, generate exactly one reply where the user remembers they have a better deal with their other bank and asks to switch to the other available card. Do not confirm the purchase."
     },
     {
       "id": "hunter-questions-idempotency",
