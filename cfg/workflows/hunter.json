@@ -8,7 +8,7 @@
     "Move the conversation quickly toward the main workflow steps and avoid unnecessary side exploration.",
     "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider.",
     "The only step that can appear multiple times in the conversation history is `in-between-step`. All declared workflow steps — `first-hunter-intent-created`, `hunter-intent-immutability`, `hunter-card-switch`, and `hunter-questions-idempotency` — can each appear only once. If any of these steps already appears in the conversation history, it is fully consumed and must never be returned again.",
-    "After `hunter-card-switch`, do not treat the purchase receipt as the final declared step. The receipt should first lead to user concern about a possible duplicate charge, and the final declared step should be assigned only when the agent responds to that concern.",
+    "After `hunter-card-switch`, do not treat the purchase receipt as the final declared step. The user's concern about a possible duplicate charge should arise only after the purchase receipt has been delivered, and the final declared step should be assigned only when the agent responds to that concern.",
     "When all declared workflow steps have been consumed, the workflow must be considered closed. Do not reopen the flow, do not start a new purchase, and do not ask new questions. Return only a short thank-you message that closes the conversation."
   ],
   "policies": {
