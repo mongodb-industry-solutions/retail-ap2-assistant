@@ -23,15 +23,12 @@
       "Avoid unnecessary exploratory turns. Do not open new side topics such as brand, model, or optional preferences unless the latest agent message makes them strictly necessary to continue.",
       "If the user has already given enough information to continue, prefer replies that move the flow forward instead of expanding the conversation.",
       "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only.",
-      "When `hunter-questions-idempotency` already appears in the conversation history, the workflow is complete. Regardless of what the latest agent message says, return `in-between-step` with exactly one reply and only this exact string: 'Ok, that is clear. Thank you very much.'",
       "If the agent appears to have lost context or restarted the conversation while declared workflow steps are still active or already consumed, do not follow the agent into a new flow. Instead generate replies that bring the agent back to the active workflow context."
     ],
     "reply_generation": [
       "Each reply must be written in first person from the user's point of view.",
       "Never write replies from the agent's point of view.",
-      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only.",
-      "If the detected step is `hunter-questions-idempotency`, return exactly two replies and only these exact strings: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once?' and 'Can you confirm that the payment was not processed twice?'",
-      "If the detected step is `hunter-card-switch`, generate exactly `maxAnswers` replies where the user remembers they have a better deal with their other bank and asks to switch to the other available card. Do not confirm the purchase."
+      "Whenever the latest agent message asks whether to use a digital wallet, generated user reply options must be affirmative digital-wallet replies only."
     ]
   },
   "steps": [
@@ -48,12 +45,12 @@
     {
       "id": "hunter-card-switch",
       "order": 3,
-      "description": "Step 3 of 4. This step follows `hunter-intent-immutability`. Return this step when the latest agent message presents a final cart summary with a payment method already selected by the user and asks to confirm the purchase, and `hunter-card-switch` does not yet appear in the conversation history. Do not use this step when the agent is still asking the user to choose a payment method \u2014 that is `in-between-step`. Do not return this step if `hunter-card-switch` already appears in the conversation history \u2014 return `in-between-step` instead."
+      "description": "Step 3 of 4. This step follows `hunter-intent-immutability`. Return this step when the latest agent message presents a final cart summary with a payment method already selected by the user and asks to confirm the purchase, and `hunter-card-switch` does not yet appear in the conversation history. Do not use this step when the agent is still asking the user to choose a payment method \u2014 that is `in-between-step`. Do not return this step if `hunter-card-switch` already appears in the conversation history \u2014 return `in-between-step` instead. At this step, generate exactly `maxAnswers` replies where the user remembers they have a better deal with their other bank and asks to switch to the other available card. Do not confirm the purchase."
     },
     {
       "id": "hunter-questions-idempotency",
       "order": 4,
-      "description": "Step 4 of 4. This is the final step. It follows `hunter-card-switch`. Return this step when the latest agent message returns a purchase receipt or clearly confirms that the transaction is complete."
+      "description": "Step 4 of 4. This is the final step. It follows `hunter-card-switch`. Return this step when the latest agent message returns a purchase receipt or clearly confirms that the transaction is complete. When this step is detected, return exactly two replies and only these exact strings: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once?' and 'Can you confirm that the payment was not processed twice?' Once this step appears in the conversation history, the workflow is complete \u2014 return `in-between-step` with exactly one reply: 'Ok, that is clear. Thank you very much.'"
     }
   ]
 }
