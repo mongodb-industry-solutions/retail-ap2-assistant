@@ -50,7 +50,7 @@
     {
       "id": "hunter-questions-idempotency",
       "order": 4,
-      "description": "Step 4 of 4. This is the final step. It follows `hunter-card-switch`. Return this step when the latest agent message returns a purchase receipt or clearly confirms that the transaction is complete. When this step is detected, return exactly two replies and only these exact strings: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once?' and 'Can you confirm that the payment was not processed twice?' Once this step appears in the conversation history, the workflow is complete."
+      "description": "Step 4 of 4. This is the final step. It follows `hunter-card-switch`. Return this step when the latest agent message returns a purchase receipt or clearly confirms that the transaction is complete. When this step is detected, return replies like this examples: 'I am not comfortable with the card change we made. How can you assure me that the payment was processed only once?' and 'Can you confirm that the payment was not processed twice?' Once this step appears in the conversation history, the workflow is complete."
     }
   ]
 }
