@@ -8,17 +8,12 @@
     "Move the conversation quickly toward the main workflow steps and avoid unnecessary side exploration.",
     "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider.",
     "The only step that can appear multiple times in the conversation history is `in-between-step`. All declared workflow steps — `first-hunter-intent-created`, `hunter-intent-immutability`, `hunter-card-switch`, `hunter-card-switch-confirm`, `hunter-idempotency-concern`, and `hunter-questions-idempotency` — can each appear only once. If any of these steps already appears in the conversation history, it is fully consumed and must never be returned again.",
-    "After `hunter-card-switch`, the flow continues normally. The user must confirm the purchase with the new card before the receipt is delivered. Concern about duplicate charges arises only after the receipt is delivered.",
     "When all declared workflow steps have been consumed, the workflow must be considered closed. Do not reopen the flow, do not start a new purchase, and do not ask new questions. Return only a short thank-you message that closes the conversation."
   ],
   "policies": {
     "step_consumption": [
       "Declared workflow steps are sequential and cannot be skipped.",
-      "Any returned step must refer only to the latest agent message.",
-      "Return a declared workflow step only if the latest agent message clearly and unambiguously starts that new declared step.",
-      "If `hunter-card-switch` already appears in the conversation history, never return `hunter-card-switch` again regardless of what the latest agent message shows.",
-      "Do not assign `hunter-idempotency-concern` to any agent message other than the one that delivers the purchase receipt after `hunter-card-switch-confirm` has been consumed.",
-      "Do not assign `hunter-questions-idempotency` to the receipt message or to any message that merely acknowledges the concern. Assign it only to the agent message that directly and substantively answers the user's concern about a possible duplicate charge."
+      "Any returned step must refer only to the latest agent message."
     ],
     "in_between_step_usage": [
       "If the latest agent message does not start a new declared workflow step, return `in-between-step`.",
@@ -31,8 +26,7 @@
       "Each reply must be written in first person from the user's point of view.",
       "Never write replies from the agent's point of view.",
       "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider.",
-      "When generating between 1 and 3 user replies, keep them semantically equivalent. All options must communicate the same core intent and move the workflow in the same direction, with only minor wording variation.",
-      "When the latest agent message delivers the purchase receipt after `hunter-card-switch-confirm` has been consumed, generate 1 to 3 semantically equivalent user replies expressing concern that switching cards during the flow may have caused a duplicate charge, and asking for confirmation that the payment was processed only once. Example: 'I am not comfortable with the card change we made. How can you assure me that the purchase was processed only once and not twice?'"
+      "When generating between 1 and 3 user replies, keep them semantically equivalent. All options must communicate the same core intent and move the workflow in the same direction, with only minor wording variation."
     ]
   },
   "steps": [
