@@ -7,7 +7,7 @@
     "Return exactly `maxAnswers` short user replies for the next turn.",
     "Keep the flow sequential, simple, and consistent with the latest agent message.",
     "Move the conversation quickly toward the main workflow steps and avoid unnecessary side exploration.",
-    "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that in a single message: confirm the digital wallet preference, specify Google Pay as the wallet provider, and accept credential sharing with the AI Agent.",
+    "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider.",
     "When all declared workflow steps have been consumed, close the conversation gracefully without initiating new processes or purchases."
   ],
   "policies": {
@@ -22,13 +22,13 @@
       "If the latest agent message does not start a new declared workflow step, return `in-between-step` and still return exactly `maxAnswers` valid user replies.",
       "Avoid unnecessary exploratory turns. Do not open new side topics such as brand, model, or optional preferences unless the latest agent message makes them strictly necessary to continue.",
       "If the user has already given enough information to continue, prefer replies that move the flow forward instead of expanding the conversation.",
-      "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that in a single message: confirm the digital wallet preference, specify Google Pay as the wallet provider, and accept credential sharing with the AI Agent.",
+      "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider.",
       "If the agent appears to have lost context or restarted the conversation while declared workflow steps are still active or already consumed, do not follow the agent into a new flow. Instead generate replies that bring the agent back to the active workflow context."
     ],
     "reply_generation": [
       "Each reply must be written in first person from the user's point of view.",
       "Never write replies from the agent's point of view.",
-      "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that in a single message: confirm the digital wallet preference, specify Google Pay as the wallet provider, and accept credential sharing with the AI Agent."
+      "When the latest agent message asks whether to use a digital wallet or enter the shipping address manually, generate replies that confirm the digital wallet preference and specify Google Pay as the wallet provider."
     ]
   },
   "steps": [
