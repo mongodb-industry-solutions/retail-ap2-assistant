@@ -54,7 +54,7 @@
     {
       "id": "why-mongodb-for-mandate-ledger",
       "order": 5,
-      "description": "Step 5 of 5. Always return this step for the agent message that comes immediately after `immutability-and-rbac-protections`. In this step, the generated user replies must always be short, coherent with the latest agent response, and clearly close the conversation. They must express gratitude, say that the user now feels reassured, and convey that they would feel comfortable continuing to shop through the shopping agent without leaving it because it is so convenient and now also clearly secure."
+      "description": "Step 5 of 5. This is the final declared step and it closes the audit flow. Always return this step for the agent message that comes immediately after `immutability-and-rbac-protections`. There must be no `in-between-step` between the last agent message in `immutability-and-rbac-protections` and this step. In this step, the generated user replies must always be short, coherent with the latest agent response, and clearly close the conversation. They must express gratitude, say that the user now feels reassured, and convey that they would feel comfortable continuing to shop through the shopping agent without leaving it because it is so convenient and now also clearly secure."
     }
   ]
 }
