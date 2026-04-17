@@ -34,7 +34,7 @@
     {
       "id": "meet-auditor-agent",
       "order": 1,
-      "description": "Step 1 of 5. Always return this step for the first agent message in the conversation: the one responding to the fixed opening user message, 'Hi, I'm not happy with the purchase. How can you help me?'. In this message, the agent introduces its auditor role and requests transaction identifiers. The generated user reply must always include the `payment_id` taken from the system metadata as the reference for the disputed transaction, and must explicitly ask: 'How can you prove what I originally agreed to buy, and that it was not an agent hallucination?'"
+      "description": "Step 1 of 5. Always return this step for the first agent message in the conversation: the one responding to the fixed opening user message, 'Hi, I'm not happy with the purchase. How can you help me?'. The generated user replies must always provide 1 to 3 semantic variations that preserve all of the following requirements: they must include the `payment_id` taken from the system metadata as the reference for the disputed transaction, ask the agent to pull the detailed ledger logs for that transaction, and explicitly ask how the agent can prove what the user originally agreed to buy and that it was not an agent hallucination."
     },
     {
       "id": "signature-flow-and-audit-trace",
