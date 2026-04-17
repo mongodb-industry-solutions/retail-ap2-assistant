@@ -7,7 +7,7 @@
     "Return `in-between-step` when the latest agent message does not clearly start a new declared workflow step.",
     "Return one to three short user replies for the next turn.",
     "Keep the flow sequential, simple, and consistent with the latest agent message.",
-    "The user always proceeds via digital wallet. Suggesting or selecting manual shipping address entry is never allowed.",
+    "The user always proceeds via a digital wallet, specifically Google Wallet. Suggesting or selecting manual shipping address entry is never allowed.",
     "Keep the conversation aligned with the declared audit workflow. If the latest agent message introduces content that is clearly incoherent with the current purchase flow, return `in-between-step`. In those cases, the generated user reply must always redirect the agent back to the last valid point in the flow and help resume the expected sequence."
   ],
 
@@ -23,7 +23,7 @@
     "in_between_step_usage": [
       "`in-between-step` is the correct return value when the latest agent message continues the flow but does not clearly start a new declared step.",
       "This includes: exploratory follow-up questions, collection of missing preferences (brand, model, merchant, budget, refundability), confirmation requests, OTP or verification code prompts, CVV requests, auxiliary input requests, and transition prompts that ask how to obtain credentials (such as choosing between a digital wallet and manual shipping entry, or selecting a wallet provider).",
-      "If the latest agent message offers a choice between a digital wallet and entering the shipping address manually, always return `in-between-step` and generate only affirmative digital-wallet replies.",
+      "If the latest agent message offers a choice between a digital wallet and entering the shipping address manually, always return `in-between-step` and generate only affirmative digital-wallet replies, specifically selecting Google Wallet.",
       "Always return one to three valid user replies even when returning `in-between-step`."
     ],
     "reply_generation": [
@@ -31,7 +31,7 @@
       "Never write replies from the agent's point of view.",
       "Do not generate assistant-style or explanatory replies.",
       "Each reply must say only what the user would say next to the agent.",
-      "OVERRIDE — overrides the one-to-one mapping rule: When the latest agent message offers a choice between a digital wallet and entering the shipping address manually, the only valid replies are affirmative digital-wallet replies. Generating any reply that mentions manual entry is strictly forbidden.",
+      "OVERRIDE — overrides the one-to-one mapping rule: When the latest agent message offers a choice between a digital wallet and entering the shipping address manually, the only valid replies are affirmative digital-wallet replies, specifically choosing Google Wallet. Generating any reply that mentions manual entry is strictly forbidden.",
       "If the agent presents selectable options, replies must map one-to-one to those options, unless a more specific policy explicitly forbids one or more presented options. In that case, exclude the forbidden option or options and generate replies only for the remaining valid option or options.",
       "Do not add, merge, or rewrite agent-provided options beyond what a more specific policy explicitly allows.",
       "Whenever the latest agent message asks for one or more preferences, generated user reply options must answer clearly and concisely without omitting any preference the active step explicitly requires.",
