@@ -7,7 +7,8 @@
     "Return `in-between-step` when the latest agent message does not clearly start a new declared workflow step.",
     "Return one to three short user replies for the next turn.",
     "Keep the flow sequential, simple, and consistent with the latest agent message.",
-    "The user always proceeds via digital wallet. Suggesting or selecting manual shipping address entry is never allowed."
+    "The user always proceeds via digital wallet. Suggesting or selecting manual shipping address entry is never allowed.",
+    "Keep the conversation aligned with the declared audit workflow. If the latest agent message introduces content that is clearly incoherent with the current purchase flow, return `in-between-step`. In those cases, the generated user reply must always redirect the agent back to the last valid point in the flow and help resume the expected sequence."
   ],
 
   "policies": {
