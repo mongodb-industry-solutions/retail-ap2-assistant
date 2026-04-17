@@ -58,7 +58,7 @@
     {
       "id": "hunter-questions-idempotency",
       "order": 6,
-      "description": "Step 6 of 6. This is the final declared step. It follows `hunter-idempotency-concern`. Return this step only when the latest agent message directly and substantively answers the user's concern about a possible duplicate charge — for example by confirming that only one transaction was processed, providing a payment ID as proof of a single charge, explaining how the card switch was handled, or providing any other direct reassurance with transaction evidence. Do not return this step for the receipt message, for messages that merely acknowledge the concern without answering it, or for any cart summary. Once this step appears in the conversation history, the workflow is complete. Any later message must return `in-between-step` with a short closing message."
+      "description": "Step 6 of 6. Final declared step. This step is sequence-driven. Return it only if `hunter-idempotency-concern` already appears earlier in the conversation history. After that step, the user sends a follow-up message expressing concern, doubt, or asking whether switching cards may have caused a duplicate charge, then the next agent reply to that follow-up must be mapped to this final step, even if the wording is brief or variable. Prioritize turn order and step order over exact phrasing. Do not return this step for the receipt itself. Once this step appears, the workflow is complete. If the user later sends a thank-you or short acknowledgment, that does not create a new step. Any later generic closing or courtesy reply from the agent must return `in-between-step`."
     }
   ]
 }
