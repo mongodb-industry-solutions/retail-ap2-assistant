@@ -64,7 +64,7 @@
     {
       "id": "payment-completed",
       "order": 5,
-      "description": "Applies when the agent returns the receipt or clearly confirms that the purchase is complete. This is the final step. Return exactly two closing replies: `Thank you very much.` and `Excellent work!`."
+      "description": "Applies when the agent returns the Payment Receipt so the purchase transaction is 100% complete. This is the final step. Return exactly two closing replies: `Thank you very much.` and `Excellent work!`."
     }
   ]
 }
