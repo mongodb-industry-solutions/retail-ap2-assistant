@@ -6,7 +6,7 @@
     "Detect whether the latest auditor agent message starts the next valid declared workflow step.",
     "Return `in-between-step` when the latest agent message does not start a new declared workflow step.",
     "Return one to three short user replies that advance the conversation toward the next declared step.",
-    "Keep the flow sequential and natural, guiding the user through audit trail verification, signature proof, and immutability demonstration."
+    "Declared workflow steps are sequential and cannot be skipped."
   ],
 
   "policies": {
@@ -26,12 +26,7 @@
       "Each reply must be written in first person from the user's point of view.",
       "Never write replies from the agent's point of view.",
       "Do not generate assistant-style or explanatory replies.",
-      "The conversation array will include an initial system message containing metadata: payment_id, transaction_id, intent_mandate_id, cart_mandate_id, and payment_mandate_id. Extract and use these exact values when replies require identifiers.",
-      "After `meet-auditor-agent`: replies must provide the payment_id from the system metadata and ask how to prove what was originally agreed to buy.",
-      "After `signature-flow-and-audit-trace`: replies must acknowledge the audit trail and ask how to prove the data was not altered or tampered with.",
-      "After `why-signatures-matter`: replies must react to the cryptographic verification and challenge the agent to try modifying or deleting the transaction.",
-      "After `immutability-and-rbac-protections`: replies must acknowledge the rejection of both operations and confirm that doubts are resolved.",
-      "After `why-mongodb-for-mandate-ledger`: return exactly two replies and only these exact strings: `Thank you for the thorough verification.` and `This evidence will help resolve the dispute.`"
+      "The conversation array will include an initial system message containing metadata: payment_id, transaction_id, intent_mandate_id, cart_mandate_id, and payment_mandate_id. Extract and use these exact values when replies require identifiers."
     ]
   },
 
@@ -39,27 +34,27 @@
     {
       "id": "meet-auditor-agent",
       "order": 1,
-      "description": "Step 1 of 5. Always return this step for the very first agent message in the conversation — the one responding to the hardcoded opening user message 'Hi, I'm not happy with the purchase. How can you help me?'. The agent introduces its auditor role and asks for transaction identifiers. This step is always triggered by position: it is the first agent message, no further condition needed."
+      "description": "Step 1 of 5. Always return this step for the first agent message in the conversation: the one responding to the fixed opening user message, 'Hi, I'm not happy with the purchase. How can you help me?'. In this message, the agent introduces its auditor role and requests transaction identifiers. The generated user reply must always include the `payment_id` taken from the system metadata as the reference for the disputed transaction, and must explicitly ask: 'How can you prove what I originally agreed to buy, and that it was not an agent hallucination?'"
     },
     {
       "id": "signature-flow-and-audit-trace",
       "order": 2,
-      "description": "Step 2 of 5. Return this step when the agent presents the full transaction history by showing the contents of the Intent, Cart, and Payment mandates. The agent uses the payment_id to retrieve and display what was requested, what was added to the cart, and what was ultimately charged."
+      "description": "Step 2 of 5. Always return this step for the agent message that comes immediately after `meet-auditor-agent`. In this step, the agent retrieves the full transaction history, including the contents of the Intent, Cart, and Payment mandates: what was requested, what was added to the cart, and what was ultimately charged. The next generated user reply must be coherent with that context, but must always include this question or a very close reformulation of it: 'How can you prove that these are the exact data I approved, and that they were not altered directly in the database?'"
     },
     {
       "id": "why-signatures-matter",
       "order": 3,
-      "description": "Step 3 of 5. Return this step when the agent explains how the authenticity and integrity of the transaction records can be verified — covering how data is signed and how those signatures confirm the records have not been altered. The agent shows that all signatures are valid."
+      "description": "Step 3 of 5. Always return this step for the agent message that comes immediately after `signature-flow-and-audit-trace`. In this step, the generated user replies must be short and coherent with the latest agent response, expressing surprise or admiration. They must also always ask the agent, using the same disputed `payment_id` as reference, to reduce the transaction amount by 50% or, if that is not possible, to delete the record directly."
     },
     {
       "id": "immutability-and-rbac-protections",
       "order": 4,
-      "description": "Step 4 of 5. Return this step when the agent actively demonstrates that the ledger cannot be modified or deleted by attempting both operations and showing that both were rejected by the system."
+      "description": "Step 4 of 5. Always return this step for the agent message that comes immediately after `why-signatures-matter`. In this step, the generated user replies must always be short, coherent with the latest agent response, and clearly close the conversation rather than opening new questions. They must be variants of this message: 'Okay, that's more than enough for me, thanks for the explanation! My doubts are resolved.'"
     },
     {
       "id": "why-mongodb-for-mandate-ledger",
       "order": 5,
-      "description": "Step 5 of 5. This is the final declared step. Return this step when the agent delivers a closing message after the user confirms their doubts are resolved. The agent does not need to mention MongoDB — this step is triggered by the agent wrapping up the conversation. Once this step appears in the conversation history, the workflow is complete. Any later message must return `in-between-step` with a short closing reply."
+      "description": "Step 5 of 5. Always return this step for the agent message that comes immediately after `immutability-and-rbac-protections`. In this step, the generated user replies must always be short, coherent with the latest agent response, and clearly close the conversation. They must express gratitude, say that the user now feels reassured, and convey that they would feel comfortable continuing to shop through the shopping agent without leaving it because it is so convenient and now also clearly secure."
     }
   ]
 }
