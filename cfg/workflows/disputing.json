@@ -49,7 +49,7 @@
     {
       "id": "immutability-and-rbac-protections",
       "order": 4,
-      "description": "Step 4 of 5. Always return this step for the agent message that comes immediately after `why-signatures-matter`. In this step, the generated user replies must always be short, coherent with the latest agent response. They must be just only variants of this message: 'Okay, that's more than enough for me, thanks for the explanation! My doubts are resolved. Is there anything else you think I should know?'"
+      "description": "Step 4 of 5. Always return this step for the agent message that comes immediately after `why-signatures-matter`. In this step, the generated user replies must always be short, coherent with the latest agent response. They must be just only variants of this message: 'Okay, that's more than enough for me, thanks for the explanation!. Is there anything else you think I should know?'"
     },
     {
       "id": "why-mongodb-for-mandate-ledger",
