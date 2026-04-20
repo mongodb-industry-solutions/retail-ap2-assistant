@@ -54,7 +54,7 @@
     {
       "id": "why-mongodb-for-mandate-ledger",
       "order": 5,
-      "description": "Step 5 of 5. This step follows `immutability-and-rbac-protections` and is the final step. It is triggered immediately and exclusively once the agent detects that the user has replied to `immutability-and-rbac-protections` — there is no possible intermediate step between `immutability-and-rbac-protections` and this one. Generated user replies must always be short, coherent with the latest agent response, and must only be variants of: 'Thank you. I consider this dispute resolved. I would feel comfortable continuing to shop through the Shopping Agent because I now see that it is not only convenient, but also clearly secure.'"
+      "description": "Step 5 of 5. Final step. This step is mandatory and must occur immediately after `immutability-and-rbac-protections` has already been consumed, meaning that `immutability-and-rbac-protections` appears as a `step` field on an earlier agent message in the conversation history. Once `immutability-and-rbac-protections` has been consumed, `why-mongodb-for-mandate-ledger` is the only valid next declared step. Do not return `in-between-step` between these two steps. Return `why-mongodb-for-mandate-ledger` for the very next agent message after `immutability-and-rbac-protections` is consumed. Generated user replies must always be short and must only be variants of: 'Thank you. I consider this dispute resolved. I would feel comfortable continuing to shop through the Shopping Agent because I now see that it is not only convenient, but also clearly secure.'"
     }
   ]
 }
