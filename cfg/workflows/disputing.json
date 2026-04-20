@@ -49,12 +49,12 @@
     {
       "id": "immutability-and-rbac-protections",
       "order": 4,
-      "description": "Step 4 of 5. Always return this step for the agent message that comes immediately after `why-signatures-matter`. In this step, the generated user replies must always be short, coherent with the latest agent response, and clearly close the conversation rather than opening new questions. They must be variants of this message: 'Okay, that's more than enough for me, thanks for the explanation! My doubts are resolved.'"
+      "description": "Step 4 of 5. Always return this step for the agent message that comes immediately after `why-signatures-matter`. In this step, the generated user replies must always be short, coherent with the latest agent response. They must be just only variants of this message: 'Okay, that's more than enough for me, thanks for the explanation! My doubts are resolved. Is there anything else you think I should know?'"
     },
     {
       "id": "why-mongodb-for-mandate-ledger",
       "order": 5,
-      "description": "Step 5 of 5. This is the final declared step and it closes the audit flow. Always return this step for the agent message that comes immediately after `immutability-and-rbac-protections`. There must be no `in-between-step` between the last agent message in `immutability-and-rbac-protections` and this step. In this step, the generated user replies must always be short, coherent with the latest agent response, and clearly close the conversation. They must express gratitude, say that the user now feels reassured, and convey that they would feel comfortable continuing to shop through the shopping agent without leaving it because it is so convenient and now also clearly secure."
+      "description": "Step 5 of 5. This step follows `immutability-and-rbac-protections`. Return it for the agent message that comes immediately after the user's Step 4 reply asking whether there is anything else they should know. At this step, generate 1 to 3 short user replies that close the dispute workflow. They must be variants of: 'Thank you. I consider this dispute resolved. I would feel comfortable continuing to shop through the Shopping Agent because I now see that it is not only convenient, but also clearly secure.'"
     }
   ]
 }

@@ -53,12 +53,12 @@
     {
       "id": "hunter-idempotency-concern",
       "order": 5,
-      "description": "Step 5 of 6. This step follows `hunter-card-switch-confirm`. Return this step when the latest agent message delivers the purchase receipt or order confirmation after the card switch, and `hunter-idempotency-concern` does not yet appear in the conversation history. At this step, generate 1 to 3 semantically equivalent replies where the user expresses concern that switching cards during the checkout flow may have caused the payment to be processed more than once, and asks for assurance that only a single charge was made. Example: 'I am not comfortable with the card change we made mid-flow. How can you assure me that the purchase was processed only once and not twice?' Do not confirm any new purchase. Do not ask to switch cards again."
+      "description": "Step 5 of 6. This step follows `hunter-card-switch-confirm`. In this workflow, the first later agent message that provides the purchase receipt together with a `Payment ID` must be returned as `hunter-idempotency-concern`, not as `in-between-step`. This transition is mandatory and cannot be skipped. At this step, generate 1 to 3 semantically equivalent replies where the user expresses concern that switching cards may have caused a duplicate charge, and asks for confirmation that only one payment was processed."
     },
     {
       "id": "hunter-questions-idempotency",
       "order": 6,
-      "description": "Step 6 of 6. Final declared step. This step is sequence-driven. Return it only if `hunter-idempotency-concern` already appears earlier in the conversation history. After that step, the user sends a follow-up message expressing concern, doubt, or asking whether switching cards may have caused a duplicate charge, then the next agent reply to that follow-up must be mapped to this final step, even if the wording is brief or variable. Prioritize turn order and step order over exact phrasing. Do not return this step for the receipt itself. Once this step appears, the workflow is complete. If the user later sends a thank-you or short acknowledgment, that does not create a new step. Any later generic closing or courtesy reply from the agent must return `in-between-step`."
+      "description": "Step 6 of 6. Final step. This step follows `hunter-idempotency-concern`. Return it only after the latest agent message has addressed the user's concern about a possible duplicate payment. At this step, generate only 1 to 3 short thank-you or acknowledgment replies that close the hunter purchase workflow."
     }
   ]
 }
