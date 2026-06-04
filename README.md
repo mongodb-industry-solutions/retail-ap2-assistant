@@ -11,7 +11,7 @@ This project started as a PoC (Proof of Concept) of a virtual assistant to perfo
 - 🧠 Pluggable LLM providers: **Vertex AI Gemini 2.5 Flash** (remote) or **local GGUF model** via llama-cpp-python
 - 💉 Dependency Injection architecture for seamless provider switching
 - ✅ Pydantic request/response validation
-- 🏗️ Class-based OOP design throughout
+- 🏗️ Class-based OOP design throughout.
 
 ## 🚀 Quick start (two separate flows)
 
