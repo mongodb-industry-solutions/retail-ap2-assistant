@@ -5,7 +5,7 @@ python-dotenv==1.2.2
 pymongo==4.16.0
 langchain==1.2.13
 langchain-core==1.2.22
-langchain-classic==1.0.3
+langchain-classic==1.0.7
 langchain-community==0.4.1
 langchain-google-genai==4.2.1
 google-genai==1.68.0
